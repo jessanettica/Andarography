@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Just Go.</h1>
+
+<button type="submit" onclick="/signup">Sign up</button>
+
+<button type="submit" onclick="/signin">Sign In</button>
+
+<button type="submit" onclick="/howitworks">How it works</button>
+
+<form action="/experience_sf">Where to?
+	<select>
+		<option value="San Francisco">San Francisco</option>
+	</select>
+</form>
+
+{% endblock %}
