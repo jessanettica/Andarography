@@ -39,6 +39,7 @@ class Experience(db.Model):
     exp_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     exp_name = db.Column(db.String(64))
     exp_category = db.Column(db.String(64))
+    exp_city = db.Column(db.String(64))
     exp_startdate = db.Column(db.DateTime)
     exp_enddate = db.Column(db.DateTime, nullable=True)
     exp_starttime = db.Column(db.DateTime, nullable=True)

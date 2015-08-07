@@ -102,9 +102,11 @@ def sf_experience():
         event_end_date = event.get('end').get('local').split("T")[0]
         event_end_time = event.get('end').get('local').split("T")[1]
         event_category = "Food & Drinks"
+        event_city = "San Francisco"
 
         event_id_sf = event.get('id')
         venue_id_sf = event.get('venue_id')
+        organizer_id_sf= = event.get('organizer_id')
 
 
 
@@ -138,22 +140,40 @@ def sf_experience():
             address_country = venues['country']
             address_zipcode = venues['postal_code']
 
+        params = {'token': 'MEPMC6UJ5E5BE5L5DKIH'}
+        request_url = "https://www.eventbriteapi.com/v3/organizers/"+organizer_id_sf
+        organizer_request = requests.get(request_url, params=params)
+
+        # organizers=venue_request.json()['name']
+        # organizers=venue_request.json()['url']
+
+        # for venue in venues:
+        #     address_line1 = venues['address_1']
+        #     address_line2 = venues['address_2']
+        #     address_city = venues['city']
+        #     address_region = venues['region']
+        #     address_country = venues['country']
+        #     address_zipcode = venues['postal_code']
+
+
+
     print "The last event details: "
     print event_name
 
-        new_experience = Experience(exp_name=event_name, exp_category=event_category, exp_startdate=event_start_date, 
+        new_experience = Experience(exp_name=event_name, exp_category=event_category, exp_city = event_city, exp_startdate=event_start_date, 
                                 exp_enddate=event_end_date, exp_starttime=event_start_time,
                                 exp_endtime=event_end_time, exp_description=event_description,
                                 exp_currency=ticket_currency, exp_price=ticket_price, exp_address_line1=address_line1,
-                                exp_address_line2, )
-    
-    
+                                exp_address_line2=address_line2, exp_address_city=address_city, exp_address_region=address_region,
+                                exp_address_country=address_country, exp_address_zipcode=address_zipcode, 
+                                exp_provider_name=event_provider_name, exp_provider_contact=event_provider_contact)
 
 
 #     new_experience= Experience( tables name = above variable name, for all of them
 #     )
-#     db.session.add(new_experience)
-# db.session.commit()
+
+    db.session.add(new_experience)
+db.session.commit()
 
 
 # python -i model.py
