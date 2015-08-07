@@ -23,7 +23,7 @@ app.jinja_env.undefined = StrictUndefined
 def index():
     """Homepage."""
 
-    return render_template("homepage.html")
+    #return render_template("homepage.html")
 
 @app.route('/register', methods=['POST'])
 def register_process():
@@ -40,13 +40,13 @@ def register_process():
     db.session.commit()
 
     flash("User %s added." % username)
-    return redirect("/")
+    #return redirect("/")
 
 @app.route('/login', methods=['GET'])
 def login_form():
     """Show login form."""
 
-    return render_template("login_form.html")
+    #return render_template("login_form.html")
 
 @app.route('/login', methods=['POST'])
 def login_process():
@@ -70,7 +70,7 @@ def login_process():
     session["user_id"] = user.user_id
 
     flash("Logged in")
-    return redirect("/users/%s" % user.user_id)
+    #return redirect("/users/%s" % user.user_id)
 
 
 @app.route('/logout')
@@ -79,39 +79,94 @@ def logout():
 
     del session["user_id"]
     flash("Logged Out.")
-    return redirect("/")
+    #return redirect("/")
 
 @app.route("/howitworks")
 def howitworks():
     """Explain the path of the user through the web app"""
 
-    return render_template("howitworks.html")
+    #return render_template("howitworks.html")
 
 @app.route("/experience_sf")
 def sf_experience():
-    """Show experiences availabel in SF"""
+    """Show Eventbrite experiences available in SF"""
     params = {'token': 'MEPMC6UJ5E5BE5L5DKIH', 'venue.city': 'San Francisco', 'categories': '110'}
     r = requests.get('https://www.eventbriteapi.com/v3/events/search/', params=params)
-    print r
-    print '*' * 20
-    print r.url
-    print '*' * 20
     events=r.json()['events']
+
     for event in events:
-        # print event.get('description').get('text') 
-        #     gets the description of the event in SF 
-        # print event.get('name').get('text')
-        #     gets the event title of the event in SF
-        # print event.get('start').get('local').split("T")[0]
-        #     gets the start date of the event in year-month-day format
-        # print event.get('start').get('local').split("T")[1]
-        #     gets the start time of the event
-        # print event.get('end').get('local').split("T")[0]
-        #     gets the end date of the event in year-month-day format
-        # print event.get('end').get('local').split("T")[1]
-        #     gets the end time of the event
-        print event
+        event_name = event.get('name').get('text')
+        event_description = event.get('description').get('text') 
+        event_start_date = event.get('start').get('local').split("T")[0] #gets the start date of the event in year-month-day format
+        event_start_time = event.get('start').get('local').split("T")[1]
+        event_end_date = event.get('end').get('local').split("T")[0]
+        event_end_time = event.get('end').get('local').split("T")[1]
+        event_category = "Food & Drinks"
+
+        event_id_sf = event.get('id')
+        venue_id_sf = event.get('venue_id')
+
+
+
+        params = {'token': 'MEPMC6UJ5E5BE5L5DKIH'}
+        request_url = "https://www.eventbriteapi.com/v3/events/"+event_id_sf+"/ticket_classes"
+        ticket_class_request= requests.get(request_url, params=params)
+            
+        tickets=ticket_class_request.json()['ticket_classes']
+            
+        for ticket in tickets:
+            if ticket == None:
+                continue
+            if ticket.get('fee')==None:
+                continue
+            ticket_price = ticket.get('fee').get('display')
+            ticket_currency = ticket.get('fee').get('currency')
+
+
+
+        params = {'token': 'MEPMC6UJ5E5BE5L5DKIH'}
+        request_url = "https://www.eventbriteapi.com/v3/venues/"+venue_id_sf
+        venue_request = requests.get(request_url, params=params)
+
+        venues=venue_request.json()['address']
+
+        for venue in venues:
+            address_line1 = venues['address_1']
+            address_line2 = venues['address_2']
+            address_city = venues['city']
+            address_region = venues['region']
+            address_country = venues['country']
+            address_zipcode = venues['postal_code']
+
+    print "The last event details: "
+    print event_name
+
+        new_experience = Experience(exp_name=event_name, exp_category=event_category, exp_startdate=event_start_date, 
+                                exp_enddate=event_end_date, exp_starttime=event_start_time,
+                                exp_endtime=event_end_time, exp_description=event_description,
+                                exp_currency=ticket_currency, exp_price=ticket_price, exp_address_line1=address_line1,
+                                exp_address_line2, )
+    
+    
+
+
+#     new_experience= Experience( tables name = above variable name, for all of them
+#     )
+#     db.session.add(new_experience)
+# db.session.commit()
+
+
+# python -i model.py
+# >>>db.create_all()
+# exit
+# run server.py
+
+
+
     return 'success'
+
+
+
 
 @app.route("/user/<int:user_id>")
 def user_page():
@@ -119,7 +174,7 @@ def user_page():
 
     #requests for info go here
 
-    return render_template("user_page.html")
+    #return render_template("user_page.html")
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the point

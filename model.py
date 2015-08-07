@@ -18,51 +18,116 @@ class User(db.Model):
     __tablename__ = "users"
 
     user_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    email = db.Column(db.String(64), nullable=True)
-    username = db.Column(db.String(64), nullable=True)
-    password = db.Column(db.String(64), nullable=True)
-    user_instagram_name = db.Column(db.String(64), nullable=True)
+    user_firstname = db.Column(db.String(64))
+    user_lastname = db.Column(db.String(64), nullable=True)
+    user_email = db.Column(db.String(64))
+    user_instagram = db.Column(db.String(64), nullable=True)
+    user_city = db.Column(db.String(64), nullable=True)
+    user_password = db.Column(db.String(64))
 
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return "<User user_id=%s username=%s>" % (self.user_id, self.username)
+        return "<User user_id=%s username=%s>" % (self.user_id, self.user_email)
 
 
 class Experience(db.Model):
-    """Movie on ratings website."""
+    """Experience list."""
 
     __tablename__ = "experiences"
 
-    experience_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    experience_name = db.Column(db.String(64))
-    experience_date = db.Column(db.DateTime)
-    
+    exp_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    exp_name = db.Column(db.String(64))
+    exp_category = db.Column(db.String(64))
+    exp_startdate = db.Column(db.DateTime)
+    exp_enddate = db.Column(db.DateTime, nullable=True)
+    exp_starttime = db.Column(db.DateTime, nullable=True)
+    exp_endtime = db.Column(db.DateTime, nullable=True)
+    exp_description = db.Column(db.String(400), nullable=True)
+    exp_currency = db.Column(db.String(4))
+    exp_price = db.Column(db.Currency)
+    exp_address_line1 = db.Column(db.String(250))
+    exp_address_line2 = db.Column(db.String(250), nullable=True)
+    exp_address_city = db.Column(db.String(200))
+    exp_address_region = db.Column(db.String(50), nullable=True)
+    exp_address_country = db.Column(db.String(250))
+    exp_address_zipcode = db.Column(db.String(10))
+    exp_provider_id = db.Column(db.String(11), db.ForeignKey('providers.provider_id'))
 
-    #could i use this to link to other websites?:imdb_url = db.Column(db.String(200))
-
-
-    def __repr__(self):
-        """Provide helpful representation when printed."""
-
-        return "<Movie movie_id=%s title=%s>" % (self.movie_id, self.title)
-
-
-class Rating(db.Model):
-    """Rating of a movie by a user."""
-
-    __tablename__ = "ratings"
-
-    rating_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    movie_id = db.Column(db.Integer)
-    user_id = db.Column(db.Integer)
-    score = db.Column(db.Integer)
+    provider = db.relationship("Providers", backref=db.backref("experiences", orber_by=exp_id))
 
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return "<Rating rating_id=%s movie_id=%s user_id=%s score=%s>" % (
-            self.rating_id, self.movie_id, self.user_id, self.score)
+        return "<Experience exp_id=%s exp_name=%s> exp_category=%s" % (self.exp_id, self.exp_name, self.exp_category)
+
+class Provider(db.Model):
+    """Information about experience and activity providers."""
+
+    __tablename__ = "providers"
+
+    provider_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    exp_id = db.Column(db.Integer, db.ForeignKey('experiences.exp_id'))
+    exp_provider_name = db.Column(db.String(50))
+    exp_provider_contact = db.Column(db.String(200))
+
+
+    experience = db.relationship("Experiences",
+                           backref=db.backref("providers", order_by=provider_id))
+
+    def __repr__(self):
+        """Provide helpful representation when printed."""
+
+        return "<Provider provider_id=%s exp_provider_name=%s" % (
+            self.provider_id, self.exp_provider_name)
+
+class Booked(db.Model):
+    """Experiences booked by a user."""
+
+    __tablename__ = "booked"
+
+    booked_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
+    exp_id = db.Column(db.Integer, db.ForeignKey('experiences.exp_id'))
+    exp_provider_id = db.Column(db.String(11), db.ForeignKey('providers.provider_id'))
+
+    user = db.relationship("User",
+                           backref=db.backref("booked", order_by=booked_id))
+
+    experience = db.relationship("Experiences",
+                           backref=db.backref("booked", order_by=booked_id))
+
+    provider = db.relationship("Providers", backref=db.backref("booked", orber_by=book_id))
+
+    def __repr__(self):
+        """Provide helpful representation when printed."""
+
+        return "<Booked booked_id=%s user_id=%s exp_id=%s " % (
+            self.booked_id, self.user_id, self.exp_id)
+
+class Wanderlist(db.Model):
+    """Experiences bookmarked by a user."""
+
+    __tablename__ = "wanderlist"
+
+    wander_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
+    exp_id = db.Column(db.Integer, db.ForeignKey('experiences.exp_id'))
+    exp_provider_id = db.Column(db.String(11), db.ForeignKey('providers.provider_id'))
+
+    user = db.relationship("User",
+                           backref=db.backref("wanderlist", order_by=wander_id))
+
+    experience = db.relationship("Experiences",
+                           backref=db.backref("wanderlist", order_by=wander_id))
+
+    provider = db.relationship("Providers", backref=db.backref("wanderlist", orber_by=wander_id))
+
+    def __repr__(self):
+        """Provide helpful representation when printed."""
+
+        return "<Wanderlist wander_id=%s user_id=%s exp_id=%s " % (
+            self.wander_id, self.user_id, self.exp_id)
 
 
 ##############################################################################
@@ -72,7 +137,7 @@ def connect_to_db(app):
     """Connect the database to our Flask app."""
 
     # Configure to use our SQLite database
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///ratings.db'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///andar.db'
     db.app = app
     db.init_app(app)
 
