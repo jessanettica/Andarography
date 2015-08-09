@@ -40,13 +40,16 @@ class Experience(db.Model):
     exp_name = db.Column(db.String(64))
     exp_category = db.Column(db.String(64))
     exp_city = db.Column(db.String(64))
-    exp_startdate = db.Column(db.DateTime)
-    exp_enddate = db.Column(db.DateTime, nullable=True)
-    exp_starttime = db.Column(db.DateTime, nullable=True)
-    exp_endtime = db.Column(db.DateTime, nullable=True)
+    exp_start_datetime = db.Column(db.DateTime)
+    exp_end_datetime = db.Column(db.DateTime)
+
+    # exp_startdate = db.Column(db.DateTime)
+    # exp_enddate = db.Column(db.DateTime, nullable=True)
+    # exp_starttime = db.Column(db.DateTime, nullable=True)
+    # exp_endtime = db.Column(db.DateTime, nullable=True)
     exp_description = db.Column(db.String(400), nullable=True)
     exp_currency = db.Column(db.String(4))
-    exp_price = db.Column(db.Currency)
+    exp_price = db.Column(db.Integer, nullable=True)
     exp_address_line1 = db.Column(db.String(250))
     exp_address_line2 = db.Column(db.String(250), nullable=True)
     exp_address_city = db.Column(db.String(200))
@@ -55,7 +58,7 @@ class Experience(db.Model):
     exp_address_zipcode = db.Column(db.String(10))
     exp_provider_id = db.Column(db.String(11), db.ForeignKey('providers.provider_id'))
 
-    provider = db.relationship("Providers", backref=db.backref("experiences", orber_by=exp_id))
+    provider = db.relationship("Provider", backref=db.backref("experiences", order_by=exp_id))
 
     def __repr__(self):
         """Provide helpful representation when printed."""
@@ -68,13 +71,14 @@ class Provider(db.Model):
     __tablename__ = "providers"
 
     provider_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    exp_id = db.Column(db.Integer, db.ForeignKey('experiences.exp_id'))
+    # exp_id = db.Column(db.Integer, db.ForeignKey('experiences.exp_id'))
     exp_provider_name = db.Column(db.String(50))
-    exp_provider_contact = db.Column(db.String(200))
+    exp_provider_url = db.Column(db.String(200), nullable=True)
+    exp_provider_contact = db.Column(db.String(200), nullable=True)
 
 
-    experience = db.relationship("Experiences",
-                           backref=db.backref("providers", order_by=provider_id))
+    # experience = db.relationship("Experience",
+    #                        backref=db.backref("providers", order_by=provider_id))
 
     def __repr__(self):
         """Provide helpful representation when printed."""
@@ -95,10 +99,10 @@ class Booked(db.Model):
     user = db.relationship("User",
                            backref=db.backref("booked", order_by=booked_id))
 
-    experience = db.relationship("Experiences",
+    experience = db.relationship("Experience",
                            backref=db.backref("booked", order_by=booked_id))
 
-    provider = db.relationship("Providers", backref=db.backref("booked", orber_by=book_id))
+    provider = db.relationship("Provider", backref=db.backref("booked", order_by=booked_id))
 
     def __repr__(self):
         """Provide helpful representation when printed."""
@@ -119,10 +123,10 @@ class Wanderlist(db.Model):
     user = db.relationship("User",
                            backref=db.backref("wanderlist", order_by=wander_id))
 
-    experience = db.relationship("Experiences",
+    experience = db.relationship("Experience",
                            backref=db.backref("wanderlist", order_by=wander_id))
 
-    provider = db.relationship("Providers", backref=db.backref("wanderlist", orber_by=wander_id))
+    provider = db.relationship("Provider", backref=db.backref("wanderlist", order_by=wander_id))
 
     def __repr__(self):
         """Provide helpful representation when printed."""
@@ -139,7 +143,7 @@ def connect_to_db(app):
 
     # Configure to use our SQLite database
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///andar.db'
-    db.app = app
+    db.app = app #connecting my model and my database
     db.init_app(app)
 
 
