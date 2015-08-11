@@ -32,59 +32,71 @@ class User(db.Model):
 
 
 class Experience(db.Model):
-    """Experience list."""
+    """Experiences and activities offered."""
 
     __tablename__ = "experiences"
 
     exp_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     exp_name = db.Column(db.String(64))
-    exp_category = db.Column(db.String(64))
     exp_city = db.Column(db.String(64))
     exp_start_datetime = db.Column(db.DateTime)
     exp_end_datetime = db.Column(db.DateTime)
-
-    # exp_startdate = db.Column(db.DateTime)
-    # exp_enddate = db.Column(db.DateTime, nullable=True)
-    # exp_starttime = db.Column(db.DateTime, nullable=True)
-    # exp_endtime = db.Column(db.DateTime, nullable=True)
     exp_description = db.Column(db.String(400), nullable=True)
     exp_currency = db.Column(db.String(4))
     exp_price = db.Column(db.Integer, nullable=True)
-    exp_address_line1 = db.Column(db.String(250))
-    exp_address_line2 = db.Column(db.String(250), nullable=True)
-    exp_address_city = db.Column(db.String(200))
-    exp_address_region = db.Column(db.String(50), nullable=True)
-    exp_address_country = db.Column(db.String(250))
-    exp_address_zipcode = db.Column(db.String(10))
-    exp_provider_id = db.Column(db.String(11), db.ForeignKey('providers.provider_id'))
+    exp_category = db.Column(db.Integer, db.ForeignKey('categories.category_id'))
+    exp_venue_id = db.Column(db.Integer, db.ForeignKey('venues.exp_venue_id'))
+    exp_provider_id = db.Column(db.Integer, db.ForeignKey('providers.exp_provider_id'))
+
+    category = db.relationship("Category", backref=db.backref("experiences", order_by=exp_id))
 
     provider = db.relationship("Provider", backref=db.backref("experiences", order_by=exp_id))
+
+    venue = db.relationship("Venue", backref=db.backref("experiences", order_by=exp_id))
 
     def __repr__(self):
         """Provide helpful representation when printed."""
 
         return "<Experience exp_id=%s exp_name=%s> exp_category=%s" % (self.exp_id, self.exp_name, self.exp_category)
 
+
 class Provider(db.Model):
     """Information about experience and activity providers."""
 
     __tablename__ = "providers"
 
-    provider_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    # exp_id = db.Column(db.Integer, db.ForeignKey('experiences.exp_id'))
+    exp_provider_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    eventbrite_provider_id = db.Column(db.Integer)
     exp_provider_name = db.Column(db.String(50))
     exp_provider_url = db.Column(db.String(200), nullable=True)
     exp_provider_contact = db.Column(db.String(200), nullable=True)
-
-
-    # experience = db.relationship("Experience",
-    #                        backref=db.backref("providers", order_by=provider_id))
 
     def __repr__(self):
         """Provide helpful representation when printed."""
 
         return "<Provider provider_id=%s exp_provider_name=%s" % (
             self.provider_id, self.exp_provider_name)
+
+
+class Venue(db.Model):
+    """Information about venues where the experiences and activities are located."""
+
+    __tablename__ = "venues"
+
+    exp_venue_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    exp_address_line1 = db.Column(db.String(250))
+    exp_address_line2 = db.Column(db.String(250), nullable=True)
+    exp_address_city = db.Column(db.String(200))
+    exp_address_region = db.Column(db.String(50), nullable=True)
+    exp_address_country = db.Column(db.String(250))
+    exp_address_zipcode = db.Column(db.String(10))
+
+    def __repr__(self):
+        """Provide helpful representation when printed."""
+
+        return "<Venue venue_id=%s venue_address_line1=%s" % (
+            self.venue_id, self.venue_address_line1)
+
 
 class Booked(db.Model):
     """Experiences booked by a user."""
@@ -94,21 +106,17 @@ class Booked(db.Model):
     booked_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
     exp_id = db.Column(db.Integer, db.ForeignKey('experiences.exp_id'))
-    exp_provider_id = db.Column(db.String(11), db.ForeignKey('providers.provider_id'))
 
-    user = db.relationship("User",
-                           backref=db.backref("booked", order_by=booked_id))
+    user = db.relationship("User", backref=db.backref("booked", order_by=booked_id))
 
-    experience = db.relationship("Experience",
-                           backref=db.backref("booked", order_by=booked_id))
-
-    provider = db.relationship("Provider", backref=db.backref("booked", order_by=booked_id))
+    experience = db.relationship("Experience", backref=db.backref("booked", order_by=booked_id))
 
     def __repr__(self):
         """Provide helpful representation when printed."""
 
         return "<Booked booked_id=%s user_id=%s exp_id=%s " % (
             self.booked_id, self.user_id, self.exp_id)
+
 
 class Wanderlist(db.Model):
     """Experiences bookmarked by a user."""
@@ -118,21 +126,32 @@ class Wanderlist(db.Model):
     wander_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
     exp_id = db.Column(db.Integer, db.ForeignKey('experiences.exp_id'))
-    exp_provider_id = db.Column(db.String(11), db.ForeignKey('providers.provider_id'))
 
     user = db.relationship("User",
                            backref=db.backref("wanderlist", order_by=wander_id))
 
-    experience = db.relationship("Experience",
-                           backref=db.backref("wanderlist", order_by=wander_id))
-
-    provider = db.relationship("Provider", backref=db.backref("wanderlist", order_by=wander_id))
+    experience = db.relationship("Experience", backref=db.backref("wanderlist", order_by=wander_id))
 
     def __repr__(self):
         """Provide helpful representation when printed."""
 
         return "<Wanderlist wander_id=%s user_id=%s exp_id=%s " % (
             self.wander_id, self.user_id, self.exp_id)
+
+
+class Category(db.Model):
+    """Categories for experiences and activities."""
+
+    __tablename__ = "categories"
+
+    category_id = db.Column(db.Integer, primary_key=True)
+    category_name = db.Column(db.String(64), nullable=True)
+
+    def __repr__(self):
+        """Provide helpful representation when printed."""
+
+        return "<Category category_id=%s category_name " % (
+            self.category_id, self.category_name)
 
 
 ##############################################################################
@@ -143,7 +162,8 @@ def connect_to_db(app):
 
     # Configure to use our SQLite database
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///andar.db'
-    db.app = app #connecting my model and my database
+    db.app = app
+    #connecting my model and my database
     db.init_app(app)
 
 

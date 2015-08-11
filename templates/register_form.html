@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Register</h1>
+
+<form action="register" method="POST">
+
+    <div>
+        <label>
+            First Name
+            <input type="text" name="user_firstname">
+        </label>
+    </div>
+
+    <div>
+        <label>
+            Last Name
+            <input type="text" name="user_lastname">
+        </label>
+    </div>
+
+    <div>
+        <label>
+            Email
+            <input type="email" name="user_email">
+        </label>
+    </div>
+
+    <div>
+        <label>
+            Password
+            <input type="password" name="user_password">
+        </label>
+    </div>
+
+    <div>
+        <label>
+            Your Current City
+            <input type="text" name="user_city">
+        </label>
+    </div>
+
+    <div>
+        <label>
+            Instagram Name
+            <input type="text" name="user_instagram">
+        </label>
+    </div>
+    
+    <div>
+        <input type="submit" value="Register">
+    </div>
+
+</form>
+
+{% endblock %}
