@@ -6,7 +6,7 @@ from flask import Flask, render_template, request, flash, redirect, session
 from flask_debugtoolbar import DebugToolbarExtension
 import requests
 
-from model import connect_to_db, db, Experience, User, Booked, Provider, Wanderlist
+from model import connect_to_db, db, Experience, User, Booked, Provider, Wanderlist, Category
 
 
 app = Flask(__name__)
@@ -50,7 +50,7 @@ def register_process():
     db.session.add(new_user)
     db.session.commit()
 
-    flash("Hi %s! You've officially registered." % user_firstname)
+    flash("Hi %s! Welcome to Andarography." % user_firstname)
     return redirect("/")
 
 
@@ -75,7 +75,6 @@ def login_process():
         return redirect("/login")
 
     if user.user_password != password:
-        print "you don't know your password???"
         flash("Incorrect password")
         return redirect("/login")
 
@@ -96,14 +95,6 @@ def logout():
     return redirect("/")
 
 
-# @app.route("/users/<int:user_id>")
-# def user_detail(user_id):
-#     """Show info about user."""
-
-#     user = User.query.get(user_id)
-#     return render_template("user.html", user=user)
-
-
 # @app.route("/howitworks")
 # def howitworks():
 #     """Explain the path of the user through the web app"""
@@ -111,25 +102,37 @@ def logout():
     #return render_template("howitworks.html")
 
 
-# @app.route("/experience_sf")
+@app.route("/experience_sf")
+def experince_list():
+    """Show list of experiences in San Francisco"""
 
-#query database to show data in this page
+    experiences = Experience.query.all()
 
-# # python -i model.py
-# # >>>db.create_all()
-# # exit
-# # run server.py
-
-#     return 'success'
+    return render_template("experience_page_sf.html", experiences=experiences)
 
 
 # @app.route("/user/<int:user_id>")
-# def user_page():
-#     """Display the user's data"""
+# def user_page(user_id):
+#     """Show info about user."""
+
+#     user = User.query.get(user_id)
+#     return render_template("user.html", user=user)
+
+# @app.route("/booked/<int:user_id>")
+# def user_booking():
+#     """Display the user's booking data"""
 
 #     #requests for info go here
 
-    #return render_template("user_page.html")
+    #return render_template("user_booking.html")
+
+# @app.route("/wanderlist/<int:user_id>")
+# def user_wanderlist():
+#     """Display the user's wishlist data"""
+
+#     #requests for info go here
+
+    #return render_template("user_wanderlist.html")
 
 if __name__ == "__main__":
     app.debug = True

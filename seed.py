@@ -30,6 +30,25 @@ def load_categories():
 
     db.session.commit()
 
+def load_cities():
+    """Load cities from u.cities into database"""
+
+    print "Cities"
+
+    for i, row in enumerate(open("seed_data/u.cities")):
+        row = row.rstrip()
+
+        city_id, city_name, city_country = row.split("|")
+
+        city = City(city_id=city_id, city_name=city_name, city_country=city_country)
+
+        db.session.add(city)
+
+        if i % 100 == 0:
+            print i
+
+    db.session.commit()
+
 
 def load_experiences():
     """Load movies from u.experiences into database."""
@@ -66,26 +85,27 @@ def load_experiences():
 def get_provider(organizer_id_sf):
     token = os.environ.get('EVENTBRITE_TOKEN')
     """Add an Eventbrite provider to  db """
-    # TODO: Check db for existing organizer ids
     params = {'token': token}
     request_url = "https://www.eventbriteapi.com/v3/organizers/"+organizer_id_sf
 
-    if organizer_id_sf in db:
-        pass
-    else:
-        organizer_request = requests.get(request_url, params=params)
+    #check db for existing provider ids, update if found
 
+    provider = Provider.query.filter_by(eventbrite_provider_id=organizer_id_sf).first()
+
+    if not provider:
+        organizer_request = requests.get(request_url, params=params)
         organizer_info = organizer_request.json()
         organizer_name = organizer_info['name']
         organizer_url = organizer_info['url']
+        eventbrite_provider_id = organizer_id_sf
 
-        provider = Provider(exp_provider_name=organizer_name, exp_provider_url=organizer_url)
+        provider = Provider(eventbrite_provider_id=eventbrite_provider_id, exp_provider_name=organizer_name, exp_provider_url=organizer_url)
 
         db.session.add(provider)
 
         db.session.commit()
 
-    return "YAY"
+    return provider.exp_provider_id
 
 
 def get_venue(venue_id_sf):
@@ -95,22 +115,20 @@ def get_venue(venue_id_sf):
     params = {'token': token}
     request_url = "https://www.eventbriteapi.com/v3/venues/"+venue_id_sf
 
-    if venue_id_sf in db:
-        pass
-    else:
+    venue = Venue.query.filter_by(eventbrite_venue_id=venue_id_sf).first()
+
+    if not venue:
         venue_request = requests.get(request_url, params=params)
+        venue_address = venue_request.json()['address']
+        address_line1 = venue_address.get('address_1', None)
+        address_line2 = venue_address.get('address_2', None)
+        address_city = venue_address.get('city', None)
+        address_region = venue_address.get('region', None)
+        address_country = venue_address.get('country', None)
+        address_zipcode = venue_address.get('postal_code', None)
+        eventbrite_venue_id = venue_id_sf
 
-        venue = venue_request.json()['address']
-        print "Venue", venue
-        address_line1 = venue.get('address_1', None)
-        print "Address Line 1", address_line1
-        address_line2 = venue.get('address_2', None)
-        address_city = venue.get('city', None)
-        address_region = venue.get('region', None)
-        address_country = venue.get('country', None)
-        address_zipcode = venue.get('postal_code', None)
-
-        venue = Venue(exp_address_line1=address_line1, exp_address_line2=address_line2, exp_address_city=address_city, exp_address_region=address_region, exp_address_country=address_country, exp_address_zipcode=address_zipcode)
+        venue = Venue(eventbrite_venue_id=eventbrite_venue_id, exp_address_line1=address_line1, exp_address_line2=address_line2, exp_address_city=address_city, exp_address_region=address_region, exp_address_country=address_country, exp_address_zipcode=address_zipcode)
 
         db.session.add(venue)
 
@@ -152,6 +170,9 @@ def sf_experience(category):
             ticket_price = ticket.get('fee').get('display')
             ticket_currency = ticket.get('fee').get('currency')
 
+        provider_id = get_provider(organizer_id_sf)
+        venue_id = get_venue(venue_id_sf)
+
         new_experience = Experience(exp_name=event_name,
                                     exp_category=event_category,
                                     exp_city=event_city,
@@ -160,8 +181,8 @@ def sf_experience(category):
                                     exp_description=event_description,
                                     exp_currency=ticket_currency,
                                     exp_price=ticket_price,
-                                    exp_venue_id=venue_id_sf,
-                                    exp_provider_id=organizer_id_sf)
+                                    exp_venue_id=venue_id,
+                                    exp_provider_id=provider_id)
 
         db.session.add(new_experience)
     db.session.commit()
@@ -174,5 +195,7 @@ if __name__ == "__main__":
     # load_users()
     # load_movies()
     # load_ratings()
+    #load_categories()
+    #load_cities()
     sf_experience(110)
     # sf_experience(108)

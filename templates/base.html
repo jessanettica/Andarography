@@ -1,5 +1,6 @@
 <!doctype html>
 <html>
+
 <head>
     <title>Andarography</title>
     <meta charset="utf-8">
@@ -7,32 +8,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="//maxcdn.bootstrapcdn.com/bootswatch/3.3.4/cyborg/bootstrap.min.css"
           rel="stylesheet">
-    <style>
-/*        body{
-             background-image: url('http://graphics8.nytimes.com/newsgraphics/2014/01/12/places-to-go/assets/images/capetown-900.jpg');
-             background-repeat: no-repeat;
- 
-        }*/
-    </style>
+    <link rel="stylesheet" href="/static/andar.css"/>
 </head>
 <body >
 
-<nav class="navbar navbar-default">
-    <div class="container-fluid">
-        <div class=
-
-
-
-
-
-<h1>Andarography</h1>
-
-{% if "user_id" in session %}
-    <a href="/logout" class="btn btn-default" href="#" role="button">Logout</a>
-    <a href="/user">{{ session['user_firstname'] }}</a>
-{% else %}
-    <a href="/login" class="btn btn-default" href="#" role="button">Login</a>
-{% endif %}
+<nav class="navbar navbar-default navbar-static-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="/">Andarography</a>
+    </div>
+    <div>
+      <ul class="nav navbar-nav navbar-right">
+        {% if "user_id" in session %}
+            <li><a href="/user">{{ session['user_firstname'] }}</a></li>
+            <li><a href="/logout">Logout</a></li>
+        {% else %}
+            <li><a href="/login">Login</a></li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>
 
 <hr>
 
@@ -44,5 +40,7 @@
     Put your body here.
 {% endblock %}
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 </body>
 </html>

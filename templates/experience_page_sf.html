@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+
+  <h1>San Francisco</h1>  <!-- maybe I can jinja the city name -->
+  <ul>
+  {% for experience in experiences %}
+    <li>
+      <a href="/">{{ experience.exp_name }}</a>
+    </li>
+  {% endfor %}
+  </ul>
+{% endblock %}

@@ -84,6 +84,7 @@ class Venue(db.Model):
     __tablename__ = "venues"
 
     exp_venue_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    eventbrite_venue_id = db.Column(db.Integer)
     exp_address_line1 = db.Column(db.String(250))
     exp_address_line2 = db.Column(db.String(250), nullable=True)
     exp_address_city = db.Column(db.String(200))
@@ -153,6 +154,21 @@ class Category(db.Model):
         return "<Category category_id=%s category_name " % (
             self.category_id, self.category_name)
 
+
+class City(db.Model):
+    """Cities available to search."""
+
+    __tablename__ = "cities"
+
+    city_id = db.Column(db.Integer, primary_key=True)
+    city_name = db.Column(db.String(64), nullable=True)
+    country_name = db.Column(db.String(64), nullable=True)
+
+    def __repr__(self):
+        """Provide helpful representation when printed."""
+
+        return "<City city_id=%s city_name " % (
+            self.city_id, self.city_name)
 
 ##############################################################################
 # Helper functions
