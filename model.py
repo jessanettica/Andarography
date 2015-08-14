@@ -57,7 +57,9 @@ class Experience(db.Model):
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return "<Experience exp_id=%s exp_name=%s> exp_category=%s" % (self.exp_id, self.exp_name, self.exp_category)
+
+        #repr no longer includes names, because some names have special unicode characters
+        return "<Experience exp_id=%s exp_category=%s>" % (self.exp_id, self.exp_category)
 
 
 class Provider(db.Model):
@@ -74,8 +76,9 @@ class Provider(db.Model):
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return "<Provider provider_id=%s exp_provider_name=%s" % (
-            self.provider_id, self.exp_provider_name)
+        #repr no longer includes names, because some names have special unicode characters
+        return "<Provider provider_id=%s>" % (
+            self.exp_provider_id)
 
 
 class Venue(db.Model):
@@ -96,7 +99,7 @@ class Venue(db.Model):
         """Provide helpful representation when printed."""
 
         return "<Venue venue_id=%s venue_address_line1=%s" % (
-            self.venue_id, self.venue_address_line1)
+            self.exp_venue_id, self.exp_address_line1)
 
 
 class Booked(db.Model):
@@ -155,20 +158,20 @@ class Category(db.Model):
             self.category_id, self.category_name)
 
 
-class City(db.Model):
-    """Cities available to search."""
+# class City(db.Model):
+#     """Cities available to search."""
 
-    __tablename__ = "cities"
+#     __tablename__ = "cities"
 
-    city_id = db.Column(db.Integer, primary_key=True)
-    city_name = db.Column(db.String(64), nullable=True)
-    country_name = db.Column(db.String(64), nullable=True)
+#     city_id = db.Column(db.Integer, primary_key=True)
+#     city_name = db.Column(db.String(64), nullable=True)
+#     country_name = db.Column(db.String(64), nullable=True)
 
-    def __repr__(self):
-        """Provide helpful representation when printed."""
+#     def __repr__(self):
+#         """Provide helpful representation when printed."""
 
-        return "<City city_id=%s city_name " % (
-            self.city_id, self.city_name)
+#         return "<City city_id=%s city_name " % (
+#             self.city_id, self.city_name
 
 ##############################################################################
 # Helper functions

@@ -11,43 +11,85 @@ from server import app
 import os
 
 
-def load_categories():
-    """Load categories from u.categories into database"""
+# def load_categories():
+#     """Load categories from u.categories into database"""
 
-    print "Categories"
+#     print "Categories"
 
-    for i, row in enumerate(open("seed_data/u.categories")):
+#     for i, row in enumerate(open("seed_data/u.categories")):
+#         row = row.rstrip()
+
+#         category_id, category_name = row.split("|")
+
+#         category = Category(category_id=category_id, category_name=category_name)
+
+#         db.session.add(category)
+
+#         if i % 100 == 0:
+#             print i
+
+#     db.session.commit()
+
+
+# def load_cities():
+#     """Load cities from u.cities into database"""
+
+#     print "Cities"
+
+#     for i, row in enumerate(open("seed_data/u.cities")):
+#         row = row.rstrip()
+
+#         city_id, city_name, city_country = row.split("|")
+
+#         city = City(city_id=city_id, city_name=city_name, city_country=city_country)
+
+#         db.session.add(city)
+
+#         if i % 100 == 0:
+#             print i
+
+#     db.session.commit()
+
+def load_providers():
+    """Load venues from u.venues into database"""
+    print "Providers"
+
+    for i, row in enumerate(open("seed_data/u.providers")):
         row = row.rstrip()
 
-        category_id, category_name = row.split("|")
+        exp_provider_name, exp_provider_contact = row.split("|")
 
-        category = Category(category_id=category_id, category_name=category_name)
+        providers = db.session.query(Provider.exp_provider_name).all()
+        provider_names = [tuple[0] for tuple in providers]
+        if exp_provider_name in provider_names:
+            continue
+        else:
+            provider = Provider(exp_provider_name=exp_provider_name, exp_provider_contact=exp_provider_contact)
 
-        db.session.add(category)
+            db.session.add(provider)
 
-        if i % 100 == 0:
-            print i
+            db.session.commit()
 
-    db.session.commit()
 
-def load_cities():
-    """Load cities from u.cities into database"""
+def load_venues():
+    """Load venues from u.venues into database"""
+    print "Venues"
 
-    print "Cities"
-
-    for i, row in enumerate(open("seed_data/u.cities")):
+    for i, row in enumerate(open("seed_data/u.venues")):
         row = row.rstrip()
 
-        city_id, city_name, city_country = row.split("|")
+        exp_address_line1, exp_address_line2, exp_address_city, exp_address_region, exp_address_country, exp_address_zipcode = row.split("|")
 
-        city = City(city_id=city_id, city_name=city_name, city_country=city_country)
+        venues = db.session.query(Venue.exp_address_line1).all()
+        venue_address = [tuple[0] for tuple in venues]
+        if exp_address_line1 in venue_address:
+            continue
+        else:
+            venue = Venue(exp_address_line1=exp_address_line1, exp_address_line2=exp_address_line2, exp_address_city=exp_address_city, exp_address_region=exp_address_region, exp_address_country=exp_address_country, exp_address_zipcode=exp_address_zipcode)
 
-        db.session.add(city)
+            db.session.add(venue)
 
-        if i % 100 == 0:
-            print i
-
-    db.session.commit()
+            db.session.commit()
 
 
 def load_experiences():
@@ -58,28 +100,31 @@ def load_experiences():
     for i, row in enumerate(open("seed_data/u.experiences")):
         row = row.rstrip()
 
-        exp_name, exp_category, exp_city, exp_startdate, exp_enddate, exp_starttime, exp_endtime, exp_description, exp_currency, exp_price, exp_address_line1, exp_address_line2, exp_address_city, exp_address_region, exp_address_country, exp_address_zipcode, exp_provider_name, exp_provider_contact = row.split("|")
+        exp_name, exp_category, exp_city, exp_start_datetime, exp_end_datetime, exp_description, exp_currency, exp_price, exp_address_line1, exp_provider_name = row.split("|")
 
-        if exp_startdate:
-            exp_startdate = datetime.datetime.strptime(exp_startdate, "%d-%m-%Y")
+        if exp_start_datetime:
+            exp_start_datetime = datetime.datetime.strptime(exp_start_datetime, "%Y-%m-%dT%H:%M:%S")
         else:
-            exp_startdate = None
+            exp_start_datetime = None
 
-        experience = Experience(exp_name=exp_name, exp_category=exp_category, exp_city=exp_city, exp_startdate=exp_startdate,
-                                exp_enddate=exp_enddate, exp_starttime=exp_starttime,
-                                exp_endtime=exp_endtime, exp_description=exp_description,
-                                exp_currency=exp_currency, exp_price=exp_price, exp_address_line1=exp_address_line1,
-                                exp_address_line2=exp_address_line2, exp_address_city=exp_address_city, exp_address_region=exp_address_region,
-                                exp_address_country=exp_address_country, exp_address_zipcode=exp_address_zipcode,
-                                exp_provider_name=exp_provider_name, exp_provider_contact=exp_provider_contact)
+        if exp_end_datetime:
+            exp_end_datetime = datetime.datetime.strptime(exp_end_datetime, "%Y-%m-%dT%H:%M:%S")
+        else:
+            exp_end_datetime = None
 
+        venue_id = db.session.query(Venue.exp_venue_id).filter(exp_address_line1 == Venue.exp_address_line1).one()[0]
+        provider_id = db.session.query(Provider.exp_provider_id).filter(exp_provider_name == Provider.exp_provider_name).one()[0]
+
+        experience = Experience(exp_name=exp_name, exp_category=exp_category, exp_city=exp_city, exp_start_datetime=exp_start_datetime,
+                                exp_end_datetime=exp_end_datetime, exp_description=exp_description,
+                                exp_currency=exp_currency, exp_price=exp_price, exp_venue_id=venue_id, exp_provider_id=provider_id)
         db.session.add(experience)
 
         # provide some sense of progress
         if i % 100 == 0:
             print i
 
-    db.session.commit()
+        db.session.commit()
 
 
 def get_provider(organizer_id_sf):
@@ -128,11 +173,19 @@ def get_venue(venue_id_sf):
         address_zipcode = venue_address.get('postal_code', None)
         eventbrite_venue_id = venue_id_sf
 
-        venue = Venue(eventbrite_venue_id=eventbrite_venue_id, exp_address_line1=address_line1, exp_address_line2=address_line2, exp_address_city=address_city, exp_address_region=address_region, exp_address_country=address_country, exp_address_zipcode=address_zipcode)
+        venue = Venue(eventbrite_venue_id=eventbrite_venue_id,
+                      exp_address_line1=address_line1,
+                      exp_address_line2=address_line2,
+                      exp_address_city=address_city,
+                      exp_address_region=address_region,
+                      exp_address_country=address_country,
+                      exp_address_zipcode=address_zipcode)
 
         db.session.add(venue)
 
         db.session.commit()
+
+        return venue.exp_venue_id
 
 
 def sf_experience(category):
@@ -148,7 +201,7 @@ def sf_experience(category):
 
         event_name = event.get('name').get('text')
         event_description = event.get('description').get('text')
-        event_start_datetime = datetime.datetime.strptime(event.get('start').get('local'), "%Y-%m-%dT%H:%M:%S")
+        event_start_datetime = datetime.datetime.strptime(event.get('start').get('local'), "%Y-%m-%dT%I:%M:%S")
         event_end_datetime = datetime.datetime.strptime(event.get('end').get('local'), "%Y-%m-%dT%H:%M:%S")
         event_category = category
         event_city = "San Francisco"
@@ -192,10 +245,8 @@ if __name__ == "__main__":
     connect_to_db(app)
     db.create_all()
 
-    # load_users()
-    # load_movies()
-    # load_ratings()
-    #load_categories()
-    #load_cities()
+    load_venues()
+    load_providers()
+    load_experiences()
     sf_experience(110)
     # sf_experience(108)

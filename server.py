@@ -6,7 +6,7 @@ from flask import Flask, render_template, request, flash, redirect, session
 from flask_debugtoolbar import DebugToolbarExtension
 import requests
 
-from model import connect_to_db, db, Experience, User, Booked, Provider, Wanderlist, Category
+from model import connect_to_db, db, User, Experience, Provider, Venue, Booked, Wanderlist, Category
 
 
 app = Flask(__name__)
@@ -106,9 +106,17 @@ def logout():
 def experince_list():
     """Show list of experiences in San Francisco"""
 
-    experiences = Experience.query.all()
+    #this is a line continuation backslash
+    #query the db session itself, grab Exp, Provider, and Venue, and then join.
+    experiences_and_providers_and_venues = db.session.query(Experience, Provider, Venue)\
+        .filter_by(exp_city="San Francisco")\
+        .join(Provider)\
+        .join(Venue)\
+        .all()
+    print experiences_and_providers_and_venues
+    # venues = Venue.query.all()
 
-    return render_template("experience_page_sf.html", experiences=experiences)
+    return render_template("experience_page_sf.html", experiences_and_providers_and_venues=experiences_and_providers_and_venues)
 
 
 # @app.route("/user/<int:user_id>")

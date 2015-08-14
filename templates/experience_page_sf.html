@@ -3,10 +3,29 @@
 
   <h1>San Francisco</h1>  <!-- maybe I can jinja the city name -->
   <ul>
-  {% for experience in experiences %}
-    <li>
-      <a href="/">{{ experience.exp_name }}</a>
-    </li>
+  {% for experience, provider, venue in experiences_and_providers_and_venues %}
+    <div>
+      <div>{{ experience.exp_name }}</div>
+      <div>{{experience.exp_description}}</div>
+      <div>{{experience.exp_start_datetime.month}}/{{experience.exp_start_datetime.day}}/{{experience.exp_start_datetime.year}}</div>
+      <div>{{experience.exp_start_datetime.hour}}:{{experience.exp_start_datetime.minute}}</div> 
+      <div>{{experience.exp_price}}</div>
+      <div>{{provider.exp_provider_name}}</div>
+      <div>{{venue.exp_address_line1}}</div>
+    {% if venue.exp_address_line2 is not "None" %}
+
+        <div>{{venue.exp_address_line2}}</div>
+    {% endif %}
+
+
+      <div>{{venue.exp_address_city}}, {{venue.exp_address_region}}</div>
+      <div>{{venue.exp_address_zipcode}}</div>
+
+        <button type="button" class="btn btn-default" value="{{experience.exp_id}}">Book It</button>
+        <button type="button" class="btn btn-default" value="{{experience.exp_id}}">Wanderlist</button>
+    </div>
   {% endfor %}
   </ul>
+
+
 {% endblock %}
