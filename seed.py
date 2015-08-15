@@ -201,7 +201,7 @@ def sf_experience(category):
 
         event_name = event.get('name').get('text')
         event_description = event.get('description').get('text')
-        event_start_datetime = datetime.datetime.strptime(event.get('start').get('local'), "%Y-%m-%dT%I:%M:%S")
+        event_start_datetime = datetime.datetime.strptime(event.get('start').get('local'), "%Y-%m-%dT%H:%M:%S")
         event_end_datetime = datetime.datetime.strptime(event.get('end').get('local'), "%Y-%m-%dT%H:%M:%S")
         event_category = category
         event_city = "San Francisco"

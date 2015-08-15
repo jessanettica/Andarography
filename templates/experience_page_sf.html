@@ -8,21 +8,31 @@
       <div>{{ experience.exp_name }}</div>
       <div>{{experience.exp_description}}</div>
       <div>{{experience.exp_start_datetime.month}}/{{experience.exp_start_datetime.day}}/{{experience.exp_start_datetime.year}}</div>
-      <div>{{experience.exp_start_datetime.hour}}:{{experience.exp_start_datetime.minute}}</div> 
+      <div>{{experience.exp_start_datetime.hour}}:{{"%02d" % experience.exp_start_datetime.minute}}</div> 
       <div>{{experience.exp_price}}</div>
       <div>{{provider.exp_provider_name}}</div>
       <div>{{venue.exp_address_line1}}</div>
-    {% if venue.exp_address_line2 is not "None" %}
 
+    {% if venue.exp_address_line2 %}
         <div>{{venue.exp_address_line2}}</div>
     {% endif %}
+
 
 
       <div>{{venue.exp_address_city}}, {{venue.exp_address_region}}</div>
       <div>{{venue.exp_address_zipcode}}</div>
 
-        <button type="button" class="btn btn-default" value="{{experience.exp_id}}">Book It</button>
-        <button type="button" class="btn btn-default" value="{{experience.exp_id}}">Wanderlist</button>
+
+    {% if provider.eventbrite_provider_id %}
+        <a href="www.eventbrite.com" target="_blank" data-toggle="tooltip" title="View on Eventbrite">
+            <img src="/static/eventbrite_logo.png" class="icon">
+        </a>
+    {% else %}
+       <button type="button" class="btn btn-default book-button" id="{{experience.exp_id}}">Book It</button>
+    {% endif %}
+
+
+        <button type="button" class="btn btn-default wander-button" id="{{experience.exp_id}}">Wanderlist</button>
     </div>
   {% endfor %}
   </ul>

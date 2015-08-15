@@ -119,6 +119,62 @@ def experince_list():
     return render_template("experience_page_sf.html", experiences_and_providers_and_venues=experiences_and_providers_and_venues)
 
 
+@app.route('/add_booked', methods=["POST"])
+def add_booked():
+    """
+    I talk to AJAX. I update the Booked table when users click on Booked button.
+    I get the experience ID from AJAX and the user ID from session.
+    """
+
+    this_user_id = session.get('user_id')
+
+    if this_user_id:
+
+        experience_id = request.form.get('experience_id')
+
+        print experience_id
+
+        experience_had = Experience.query.filter(Experience.exp_id == experience_id,
+                                                 User.user_id == this_user_id).first()
+
+        if not experience_had:
+            print "adding new experience!"
+            print "user id and experience id", this_user_id, experience_id
+            new_exp = Booked(user_id=this_user_id,
+                             exp_id=experience_id)
+            db.session.add(new_exp)
+            db.session.commit()
+    return "success"
+
+
+@app.route('/add_wanderlist', methods=["POST"])
+def add_wanderlist():
+    """
+    I talk to AJAX. I update the Wanderlist table when users click on Wanderlist button.
+    I get the experience ID from AJAX and the user ID from session.
+    """
+
+    this_user_id = session.get('user_id')
+
+    if this_user_id:
+
+        experience_id = request.form.get('experience_id')
+
+        print experience_id
+
+        experience_saved = Experience.query.filter(Experience.exp_id == experience_id,
+                                                   User.user_id == this_user_id).first()
+
+        if not experience_saved:
+            print "adding new experience!"
+            print "user id and experience id", this_user_id, experience_id
+            new_exp = Wanderlist(user_id=this_user_id,
+                                 exp_id=experience_id)
+            db.session.add(new_exp)
+            db.session.commit()
+    return "success"
+
+
 # @app.route("/user/<int:user_id>")
 # def user_page(user_id):
 #     """Show info about user."""
