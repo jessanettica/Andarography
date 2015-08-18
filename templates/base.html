@@ -22,7 +22,7 @@
     <div>
       <ul class="nav navbar-nav navbar-right">
         {% if "user_id" in session %}
-            <li><a href="/user">{{ session['user_firstname'] }}</a></li>
+            <li><a href="/user/{{session.user_id}}">{{ session['user_firstname'] }}</a></li>
             <li><a href="/logout">Logout</a></li>
         {% else %}
             <li><a href="/login">Login</a></li>

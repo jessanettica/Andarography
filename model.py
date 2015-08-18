@@ -37,6 +37,7 @@ class Experience(db.Model):
     __tablename__ = "experiences"
 
     exp_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    eventbrite_event_id = db.Column(db.Integer)
     exp_name = db.Column(db.String(64))
     exp_city = db.Column(db.String(64))
     exp_start_datetime = db.Column(db.DateTime)
@@ -56,7 +57,6 @@ class Experience(db.Model):
 
     def __repr__(self):
         """Provide helpful representation when printed."""
-
 
         #repr no longer includes names, because some names have special unicode characters
         return "<Experience exp_id=%s exp_category=%s>" % (self.exp_id, self.exp_category)

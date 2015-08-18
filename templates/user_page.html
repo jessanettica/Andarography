@@ -1,22 +1,25 @@
 {% extends 'base.html' %}
 {% block content %}
 
-  <h1>{{ user.email }}</h1>
+<div class="container">
+  <ul id="exp-details">
+
+  <h1>{{ user.user_firstname }}</h1>
 
   <p>City: {{ user.user_city }}</p>
-  <p>Zipcode: {{ user.zipcode }}</p>
 
-  {% if user.experiences %}
+  {% for booked, experience in exp_booked %}
+   
+    <p>{{experience.exp_name}}</p>
 
-    <h2>Experiences</h2>
-    <ul>
-    {% for rating in user.ratings %};
-      <li>
-        <a href="/movies/{{ rating.movie_id }}">{{ rating.movie.title }}</a>
-        was rated {{ rating.score }}
-      </li>
-    {% endfor %}
-    </ul>
-  {% endif %}
+  {% endfor %}
 
+  {% for wanderlisted, experience in exp_wanderlisted %}
+   
+    <p>{{experience.exp_name}}</p>
+
+  {% endfor %}
+
+
+</div>
 {% endblock %}

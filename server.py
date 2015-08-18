@@ -114,9 +114,12 @@ def experince_list():
         .join(Venue)\
         .all()
     print experiences_and_providers_and_venues
+
+    favorited_experiences = db.session.query(Wanderlist.exp_id).filter_by(user_id=session.get('user_id')).all()
+    favorited_experiences = [favorited_experience.exp_id for favorited_experience in favorited_experiences]
     # venues = Venue.query.all()
 
-    return render_template("experience_page_sf.html", experiences_and_providers_and_venues=experiences_and_providers_and_venues)
+    return render_template("experience_page_sf.html", favorited_experiences=favorited_experiences, experiences_and_providers_and_venues=experiences_and_providers_and_venues)
 
 
 @app.route('/add_booked', methods=["POST"])
@@ -134,8 +137,10 @@ def add_booked():
 
         print experience_id
 
-        experience_had = Experience.query.filter(Experience.exp_id == experience_id,
-                                                 User.user_id == this_user_id).first()
+        experience_had = Booked.query.filter(Booked.exp_id == experience_id,
+                                                 Booked.user_id == this_user_id).first()
+
+        print experience_had
 
         if not experience_had:
             print "adding new experience!"
@@ -162,8 +167,8 @@ def add_wanderlist():
 
         print experience_id
 
-        experience_saved = Experience.query.filter(Experience.exp_id == experience_id,
-                                                   User.user_id == this_user_id).first()
+        experience_saved = Wanderlist.query.filter(Wanderlist.exp_id == experience_id,
+                                                   Wanderlist.user_id == this_user_id).first()
 
         if not experience_saved:
             print "adding new experience!"
@@ -175,12 +180,21 @@ def add_wanderlist():
     return "success"
 
 
-# @app.route("/user/<int:user_id>")
-# def user_page(user_id):
-#     """Show info about user."""
+@app.route("/user/<int:user_id>")
+def user_page(user_id):
+    """Show info about user."""
 
-#     user = User.query.get(user_id)
-#     return render_template("user.html", user=user)
+    user_id = session['user_id']
+    user = User.query.filter_by(user_id=user_id).first()
+    print user
+
+    exp_booked = db.session.query(Booked,Experience).filter(Booked.user_id==user_id).join(Experience).all()
+
+    exp_wanderlisted = db.session.query(Wanderlist, Experience).filter(Wanderlist.user_id==user_id).join(Experience).all()
+
+    return render_template("user_page.html", user=user, exp_booked=exp_booked, exp_wanderlisted=exp_wanderlisted)
+
+
 
 # @app.route("/booked/<int:user_id>")
 # def user_booking():
@@ -188,15 +202,15 @@ def add_wanderlist():
 
 #     #requests for info go here
 
-    #return render_template("user_booking.html")
+#     return render_template("user_booking.html")
 
 # @app.route("/wanderlist/<int:user_id>")
 # def user_wanderlist():
 #     """Display the user's wishlist data"""
 
-#     #requests for info go here
+#     requests for info go here
 
-    #return render_template("user_wanderlist.html")
+#     return render_template("user_wanderlist.html")
 
 if __name__ == "__main__":
     app.debug = True

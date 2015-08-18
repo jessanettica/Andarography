@@ -1,41 +1,77 @@
 {% extends 'base.html' %}
 {% block content %}
 
+<div class = "container">
   <h1>San Francisco</h1>  <!-- maybe I can jinja the city name -->
-  <ul>
+  <ul id="exp-details">
   {% for experience, provider, venue in experiences_and_providers_and_venues %}
     <div>
       <div>{{ experience.exp_name }}</div>
-      <div>{{experience.exp_description}}</div>
+
+
+<!-- Trigger the modal with a button -->
+      <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModal{{experience.exp_id}}">Experience Details</button>
+
+      <!-- Modal -->
+        <div class="modal fade" id="myModal{{experience.exp_id}}" role="dialog">
+          <div class="modal-dialog">
+          
+            <!-- Modal content-->
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Description</h4>
+              </div>
+              <div class="modal-body">
+                <p> {{experience.exp_description}}</p>
+                      <div>{{provider.exp_provider_name}}</div>
+
+                <div>{{venue.exp_address_line1}}</div>
+
+                    {% if venue.exp_address_line2 %}
+                        <div>{{venue.exp_address_line2}}</div>
+                    {% endif %}
+
+
+                      <div>{{venue.exp_address_city}}, {{venue.exp_address_region}}</div>
+                      <div>{{venue.exp_address_zipcode}}</div>
+
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+    
+
+
       <div>{{experience.exp_start_datetime.month}}/{{experience.exp_start_datetime.day}}/{{experience.exp_start_datetime.year}}</div>
       <div>{{experience.exp_start_datetime.hour}}:{{"%02d" % experience.exp_start_datetime.minute}}</div> 
-      <div>{{experience.exp_price}}</div>
-      <div>{{provider.exp_provider_name}}</div>
-      <div>{{venue.exp_address_line1}}</div>
+      <div class = "badge">{{experience.exp_price}}</div>
 
-    {% if venue.exp_address_line2 %}
-        <div>{{venue.exp_address_line2}}</div>
-    {% endif %}
+      
 
-
-
-      <div>{{venue.exp_address_city}}, {{venue.exp_address_region}}</div>
-      <div>{{venue.exp_address_zipcode}}</div>
 
 
     {% if provider.eventbrite_provider_id %}
-        <a href="www.eventbrite.com" target="_blank" data-toggle="tooltip" title="View on Eventbrite">
-            <img src="/static/eventbrite_logo.png" class="icon">
+        <a href="http://www.eventbrite.com/event/{{experience.eventbrite_event_id}}?ref=ebtn" class="book-button" target="_blank">
+          <img border="0" src="http://www.eventbrite.com/custombutton?eid={{experience.eventbrite_event_id}}" alt="Register for Eventbrite API - Office Hours on Eventbrite" />
         </a>
     {% else %}
-       <button type="button" class="btn btn-default book-button" id="{{experience.exp_id}}">Book It</button>
+        <button type="button" class="btn btn-default book-button" id="{{experience.exp_id}}">Book It</button>
     {% endif %}
 
 
-        <button type="button" class="btn btn-default wander-button" id="{{experience.exp_id}}">Wanderlist</button>
+        <button type="button" class="btn btn-default wander-button
+          {% if experience.exp_id in favorited_experiences %}
+          btn-primary
+          {% endif %}
+        " id="{{experience.exp_id}}">Wanderlist</button>
     </div>
   {% endfor %}
   </ul>
 
-
+</div>
 {% endblock %}

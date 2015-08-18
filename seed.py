@@ -11,24 +11,24 @@ from server import app
 import os
 
 
-# def load_categories():
-#     """Load categories from u.categories into database"""
+def load_categories():
+    """Load categories from u.categories into database"""
 
-#     print "Categories"
+    print "Categories"
 
-#     for i, row in enumerate(open("seed_data/u.categories")):
-#         row = row.rstrip()
+    for i, row in enumerate(open("seed_data/u.categories")):
+        row = row.rstrip()
 
-#         category_id, category_name = row.split("|")
+        category_id, category_name = row.split("|")
 
-#         category = Category(category_id=category_id, category_name=category_name)
+        category = Category(category_id=category_id, category_name=category_name)
 
-#         db.session.add(category)
+        db.session.add(category)
 
-#         if i % 100 == 0:
-#             print i
+        if i % 100 == 0:
+            print i
 
-#     db.session.commit()
+    db.session.commit()
 
 
 # def load_cities():
@@ -205,7 +205,6 @@ def sf_experience(category):
         event_end_datetime = datetime.datetime.strptime(event.get('end').get('local'), "%Y-%m-%dT%H:%M:%S")
         event_category = category
         event_city = "San Francisco"
-
         event_id_sf = event.get('id')
         venue_id_sf = event.get('venue_id')
         organizer_id_sf = event.get('organizer_id')
@@ -227,6 +226,7 @@ def sf_experience(category):
         venue_id = get_venue(venue_id_sf)
 
         new_experience = Experience(exp_name=event_name,
+                                    eventbrite_event_id=event_id_sf,
                                     exp_category=event_category,
                                     exp_city=event_city,
                                     exp_start_datetime=event_start_datetime,
@@ -249,4 +249,4 @@ if __name__ == "__main__":
     load_providers()
     load_experiences()
     sf_experience(110)
-    # sf_experience(108)
+    sf_experience(108)

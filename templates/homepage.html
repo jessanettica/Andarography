@@ -1,14 +1,26 @@
 {% extends 'base.html' %}
 {% block content %}
 
+<div class="container">
+
 <h1>Just Go.</h1>
 
 <button type="button" onclick="/howitworks" class="btn btn-default">How it works</button>
 
-<form action="/experience_sf">Where to?
-	<select>
-		<option value="San Francisco">San Francisco</option>
-	</select>
-</form>
+
+<div class="dropdown">
+  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+    Where to?
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+    <li><a href="/experience_sf">San Francisco, USA</a></li>
+    <li><a href="#">Cape Town, South Africa</a></li>
+    <li><a href="#">St. Petersburg, Russia</a></li>
+    <li><a href="#">Paris, France</a></li>
+  </ul>
+</div>
+
+</div>
 
 {% endblock %}
