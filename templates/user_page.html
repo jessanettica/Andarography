@@ -2,23 +2,34 @@
 {% block content %}
 
 <div class="container">
-  <ul id="exp-details">
 
   <h1>{{ user.user_firstname }}</h1>
 
   <p>City: {{ user.user_city }}</p>
 
+  <h2>Booked Experiences:</h2>
+
+  <ul class="list-group">
+
   {% for booked, experience in exp_booked %}
    
-    <p>{{experience.exp_name}}</p>
+    <li class="list-group-item">{{experience.exp_name}}</li>
 
   {% endfor %}
+
+  </ul>
+
+<h3>Wanderlist</h3>
+
+  <ul class="list-group">
 
   {% for wanderlisted, experience in exp_wanderlisted %}
    
-    <p>{{experience.exp_name}}</p>
+    <li class="list-group-item">{{experience.exp_name}}</li>
 
   {% endfor %}
+
+  </ul>
 
 
 </div>

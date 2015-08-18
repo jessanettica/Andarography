@@ -54,13 +54,16 @@
       
 
 
-
     {% if provider.eventbrite_provider_id %}
         <a href="http://www.eventbrite.com/event/{{experience.eventbrite_event_id}}?ref=ebtn" class="book-button" target="_blank">
           <img border="0" src="http://www.eventbrite.com/custombutton?eid={{experience.eventbrite_event_id}}" alt="Register for Eventbrite API - Office Hours on Eventbrite" />
         </a>
     {% else %}
-        <button type="button" class="btn btn-default book-button" id="{{experience.exp_id}}">Book It</button>
+        <button type="button" class="btn btn-default book-button 
+        {% if experience.exp_id in booked_experiences %}
+          btn-warning
+          {% endif %}
+        "  id="{{experience.exp_id}}">Book It</button>
     {% endif %}
 
 

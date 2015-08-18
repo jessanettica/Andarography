@@ -117,9 +117,12 @@ def experince_list():
 
     favorited_experiences = db.session.query(Wanderlist.exp_id).filter_by(user_id=session.get('user_id')).all()
     favorited_experiences = [favorited_experience.exp_id for favorited_experience in favorited_experiences]
+
+    booked_experiences = db.session.query(Booked.exp_id).filter_by(user_id=session.get('user_id')).all()
+    booked_experiences = [booked_experience.exp_id for booked_experience in booked_experiences]
     # venues = Venue.query.all()
 
-    return render_template("experience_page_sf.html", favorited_experiences=favorited_experiences, experiences_and_providers_and_venues=experiences_and_providers_and_venues)
+    return render_template("experience_page_sf.html", favorited_experiences=favorited_experiences, booked_experiences=booked_experiences, experiences_and_providers_and_venues=experiences_and_providers_and_venues)
 
 
 @app.route('/add_booked', methods=["POST"])
@@ -195,22 +198,6 @@ def user_page(user_id):
     return render_template("user_page.html", user=user, exp_booked=exp_booked, exp_wanderlisted=exp_wanderlisted)
 
 
-
-# @app.route("/booked/<int:user_id>")
-# def user_booking():
-#     """Display the user's booking data"""
-
-#     #requests for info go here
-
-#     return render_template("user_booking.html")
-
-# @app.route("/wanderlist/<int:user_id>")
-# def user_wanderlist():
-#     """Display the user's wishlist data"""
-
-#     requests for info go here
-
-#     return render_template("user_wanderlist.html")
 
 if __name__ == "__main__":
     app.debug = True
