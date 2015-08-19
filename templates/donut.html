@@ -1,0 +1,83 @@
+ <!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+<link href="//maxcdn.bootstrapcdn.com/bootswatch/3.3.4/cyborg/bootstrap.min.css"
+          rel="stylesheet">
+</head>
+<body>
+
+
+
+<script>
+// d3.csv('/visualization_process.csv', makeForceGraph);
+// function makeForceGraph() {
+//    console.log("hello")
+// }
+d3.csv('/visualization_process.csv', function (data) {
+  console.log(data);
+  });
+
+</script>
+
+
+
+<script>
+
+var width = 960,
+    height = 500,
+    radius = Math.min(width, height) / 2;
+
+var color = d3.scale.ordinal()
+    .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+
+var arc = d3.svg.arc()
+    .outerRadius(radius - 10)
+    .innerRadius(radius - 70);
+
+var pie = d3.layout.pie()
+    .sort(null)
+    .value(function(d) { return d.population; });
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height)
+  .append("g")
+    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+d3.csv("data.csv", function(error, data) {
+
+  data.forEach(function(d) {
+    d.population = +d.population;
+  });
+
+  var g = svg.selectAll(".arc")
+      .data(pie(data))
+    .enter().append("g")
+      .attr("class", "arc");
+
+  g.append("path")
+      .attr("d", arc)
+      .style("fill", function(d) { return color(d.data.age); });
+
+  g.append("text")
+      .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
+      .attr("dy", ".35em")
+      .style("text-anchor", "middle")
+      .text(function(d) { return d.data.age; });
+
+});
+
+</script>
+
+
+
+
+
+
+
+
+
+</body>
+</html>

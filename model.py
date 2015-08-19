@@ -38,6 +38,7 @@ class Experience(db.Model):
 
     exp_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     eventbrite_event_id = db.Column(db.Integer)
+    private = db.Column(db.Boolean, nullable=False, default=False)
     exp_name = db.Column(db.String(64))
     exp_city = db.Column(db.String(64))
     exp_start_datetime = db.Column(db.DateTime)

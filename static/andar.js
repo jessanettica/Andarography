@@ -4,13 +4,14 @@ $(document).ready(function() {
     $(".book-button").click(function() { //highlight the button
         console.log(this);
       $(this).addClass("btn-warning");
-
+    alert($(this).attr("id"));
     $.ajax("/add_booked", {
         method: "POST",
         datatype:"json",
         data: {'experience_id': $(this).attr("id")}
         }).done(function() {
                 console.log("go go go!");          // confirm in the console
+                // graph is likely to change, refresh it
         });
     });
 });

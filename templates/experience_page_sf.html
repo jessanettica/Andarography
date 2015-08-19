@@ -55,7 +55,7 @@
 
 
     {% if provider.eventbrite_provider_id %}
-        <a href="http://www.eventbrite.com/event/{{experience.eventbrite_event_id}}?ref=ebtn" class="book-button" target="_blank">
+        <a id="{{experience.exp_id}}" href="http://www.eventbrite.com/event/{{experience.eventbrite_event_id}}?ref=ebtn" class="book-button" target="_blank">
           <img border="0" src="http://www.eventbrite.com/custombutton?eid={{experience.eventbrite_event_id}}" alt="Register for Eventbrite API - Office Hours on Eventbrite" />
         </a>
     {% else %}

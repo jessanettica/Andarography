@@ -5,6 +5,9 @@ from jinja2 import StrictUndefined
 from flask import Flask, render_template, request, flash, redirect, session
 from flask_debugtoolbar import DebugToolbarExtension
 import requests
+from cStringIO import StringIO
+import csv
+
 
 from model import connect_to_db, db, User, Experience, Provider, Venue, Booked, Wanderlist, Category
 
@@ -109,7 +112,7 @@ def experince_list():
     #this is a line continuation backslash
     #query the db session itself, grab Exp, Provider, and Venue, and then join.
     experiences_and_providers_and_venues = db.session.query(Experience, Provider, Venue)\
-        .filter_by(exp_city="San Francisco")\
+        .filter_by(exp_city="San Francisco", private="0")\
         .join(Provider)\
         .join(Venue)\
         .all()
@@ -138,7 +141,7 @@ def add_booked():
 
         experience_id = request.form.get('experience_id')
 
-        print experience_id
+        print "experience_id = ", experience_id
 
         experience_had = Booked.query.filter(Booked.exp_id == experience_id,
                                                  Booked.user_id == this_user_id).first()
@@ -198,6 +201,40 @@ def user_page(user_id):
     return render_template("user_page.html", user=user, exp_booked=exp_booked, exp_wanderlisted=exp_wanderlisted)
 
 
+@app.route("/visualization_process.csv", methods=['GET',])
+def visualization_process():
+    """Process d3 visualization of user's activity categories"""
+
+    outfile = StringIO()  # in-memory file object
+    outcsv = csv.writer(outfile)
+    results = db.session.query(Booked.user_id,
+                               Booked.exp_id,
+                               Experience.exp_category,
+                               Experience.exp_start_datetime).join(Experience).filter(Booked.user_id == session['user_id'])
+    print results
+    outcsv.writerow(["user_id", "exp_id", "exp_category", "exp_start_datetime"])
+    outcsv.writerows(results.all())
+
+    outfile.seek(0)
+
+    print outfile.read()
+    outfile.seek(0)
+    return outfile.read()
+
+
+@app.route("/visualize")
+def visualize_data():
+    """d3 visualization of user's answers"""
+
+    return render_template("donut.html")
+
+# @app_route(/form)
+#     hike = Experience( location=location,
+#         private=True)
+
+#         add and commit
+
+#         then add to booked table. 
 
 if __name__ == "__main__":
     app.debug = True
