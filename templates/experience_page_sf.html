@@ -1,11 +1,13 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div class = "container">
-  <h1>San Francisco</h1>  <!-- maybe I can jinja the city name -->
+<h1>San Francisco</h1>  <!-- maybe I can jinja the city name -->
+
+
   <ul id="exp-details">
   {% for experience, provider, venue in experiences_and_providers_and_venues %}
-    <div>
+  
+
       <div>{{ experience.exp_name }}</div>
 
 
@@ -72,9 +74,9 @@
           btn-primary
           {% endif %}
         " id="{{experience.exp_id}}">Wanderlist</button>
-    </div>
+
   {% endfor %}
   </ul>
 
-</div>
+
 {% endblock %}

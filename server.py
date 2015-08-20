@@ -7,6 +7,7 @@ from flask_debugtoolbar import DebugToolbarExtension
 import requests
 from cStringIO import StringIO
 import csv
+from datetime import datetime
 
 
 from model import connect_to_db, db, User, Experience, Provider, Venue, Booked, Wanderlist, Category
@@ -186,6 +187,39 @@ def add_wanderlist():
     return "success"
 
 
+@app.route('/add_form', methods=["POST"])
+def add_form():
+    """
+    Update the Experience table when users click on Submit button. Then
+    I update the Booked table. I get the experience ID from AJAX and the user ID from session.
+    """
+    name = request.form.get("experience-name")
+    city = request.form.get("city")
+    date = request.form.get("date")
+    date = datetime.strptime(date, "%Y-%m-%dT%H:%M")
+    description = request.form.get("description")
+    category = request.form.get("category")
+
+    new_exp = Experience(exp_name=name,
+                         exp_city=city,
+                         exp_start_datetime=date,
+                         exp_description=description,
+                         exp_category=category,
+                         private=True)
+    db.session.add(new_exp)
+    db.session.commit()
+
+    this_user_id = int(session.get('user_id'))
+    exp_id = db.session.query(Experience.exp_id).filter(name == Experience.exp_name).one()[0]
+
+    new_exp = Booked(user_id=this_user_id,
+                     exp_id=exp_id)
+    db.session.add(new_exp)
+    db.session.commit()
+
+    return "WHOOOOHOOOO"
+
+
 @app.route("/user/<int:user_id>")
 def user_page(user_id):
     """Show info about user."""
@@ -223,10 +257,21 @@ def visualization_process():
 
 
 @app.route("/visualize")
-def visualize_data():
-    """d3 visualization of user's answers"""
+def count_exp_in_category():
+    """For user in session, count the number of booked experiences in each category"""
 
-    return render_template("donut.html")
+    this_user_id = session.get('user_id')
+
+    if this_user_id:
+
+        experience_booked = Booked.query.filter(Booked.user_id == this_user_id).all()
+
+    for thing in experience_booked:
+
+        print " TIUHLJHBJKHVYHKGVK", thing.exp_id
+
+    print "KRISTEN IS ABUSING ME", experience_booked
+    return "YO HI"
 
 # @app_route(/form)
 #     hike = Experience( location=location,
@@ -234,7 +279,7 @@ def visualize_data():
 
 #         add and commit
 
-#         then add to booked table. 
+#         then add to booked table.
 
 if __name__ == "__main__":
     app.debug = True

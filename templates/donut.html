@@ -5,16 +5,25 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
 <link href="//maxcdn.bootstrapcdn.com/bootswatch/3.3.4/cyborg/bootstrap.min.css"
           rel="stylesheet">
+<style>
+
+body {
+  font: 10px sans-serif;
+}
+
+.arc path {
+  stroke: #fff;
+}
+
+</style>
+
 </head>
 <body>
 
 
 
 <script>
-// d3.csv('/visualization_process.csv', makeForceGraph);
-// function makeForceGraph() {
-//    console.log("hello")
-// }
+
 d3.csv('/visualization_process.csv', function (data) {
   console.log(data);
   });
@@ -38,7 +47,7 @@ var arc = d3.svg.arc()
 
 var pie = d3.layout.pie()
     .sort(null)
-    .value(function(d) { return d.population; });
+    .value(function(d) { return d.exp_category; });
 
 var svg = d3.select("body").append("svg")
     .attr("width", width)
@@ -46,10 +55,10 @@ var svg = d3.select("body").append("svg")
   .append("g")
     .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
-d3.csv("data.csv", function(error, data) {
+d3.csv("/visualization_process.csv", function(error, data) {
 
   data.forEach(function(d) {
-    d.population = +d.population;
+    d.exp_category = +d.exp_category;
   });
 
   var g = svg.selectAll(".arc")
@@ -59,13 +68,13 @@ d3.csv("data.csv", function(error, data) {
 
   g.append("path")
       .attr("d", arc)
-      .style("fill", function(d) { return color(d.data.age); });
+      .style("fill", function(d) { return color(d.data.exp_name); });
 
   g.append("text")
       .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
       .attr("dy", ".35em")
       .style("text-anchor", "middle")
-      .text(function(d) { return d.data.age; });
+      .text(function(d) { return d.data.exp_name; });
 
 });
 
