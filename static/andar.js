@@ -4,7 +4,7 @@ $(document).ready(function() {
     $(".book-button").click(function() { //highlight the button
         console.log(this);
       $(this).addClass("btn-warning");
-    alert($(this).attr("id"));
+      
     $.ajax("/add_booked", {
         method: "POST",
         datatype:"json",
@@ -29,12 +29,5 @@ $(document).ready(function() {
         }).done(function() {
                 console.log("Victory!");          // confirm in the console
         });
-    });
-});
-
-
-$(document).ready(function(){
-    $("#form-submit").submit(function(){
-        alert("THIS BETTER WORK.PLEASE.");
     });
 });

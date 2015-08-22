@@ -2,41 +2,39 @@
 {% block content %}
 
 <style>
-.globe{
-    background:url('../Hackbright_F/static/globe.jpg') no-repeat center center;
-    height: 500px;
-    background-size: 100% auto;
+body{
+    background:url(/static/globe.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
 }
 </style>
 
 <div class="container">
   <div class="row">
     <div class="col-md-2"></div>
-      <div class="col-md-8 col-sm-6 col-xs-12 well text-center">
+      <div class="col-md-8 col-sm-6 col-xs-12 well text-center just-go">
 
-        <h1 class="">Just Go.</h1>
+        <h1>Just Go.</h1>
 
-        <button type="button" onclick="/howitworks" class="btn btn-default">How it works</button>
+        <button type="button" onclick="/howitworks" class="btn btn-default btn-home">How it works</button>
 
-
-        <div class="dropdown">
-
-            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-            Where to?
-            <span class="caret"></span>
-            </button>
-
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                  <li><a href="/experience_sf">San Francisco, USA</a></li>
-                  <li><a href="#">Cape Town, South Africa</a></li>
-                  <li><a href="#">St. Petersburg, Russia</a></li>
-                  <li><a href="#">Paris, France</a></li>
-              </ul>
+      <div class="dropdown">
+          <button class="btn btn-default dropdown-toggle btn-home" type="button" id="menu1" data-toggle="dropdown">Where to?
+          <span class="caret"></span></button>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="/experience_sf">San Francisco, CA</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Cape Town, South Africa</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">St. Petersburg, Russia</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Paris, France</a></li>
+          </ul>
         </div>
       </div>
-      
-    <div class="col-md-2"></div>
+
+
+      </div>
   </div>
 </div>
+
 
 {% endblock %}

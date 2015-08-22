@@ -1,68 +1,113 @@
 {% extends 'base.html' %}
 {% block content %}
 
+<style>
+body{
+    background:url(/static/pebbles.jpeg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+.user-details{
+    background-color: transparent;
+    background: rgba(255, 255, 255, 0.3);
+}
+.new-exp-btn{
+  float:right;
+}
+</style>
+
 <div class="container">
 
-  <h1>{{ user.user_firstname }}</h1>
+  <h1 class="text-center">{{ user.user_firstname }}</h1>
 
-  <p>City: {{ user.user_city }}</p>
+  <p class="text-center">Home City: {{ user.user_city }}</p>
 
+
+<!-- Trigger the modal with a button -->
+      <button type="button" class="btn btn-info btn-sm new-exp-btn" data-toggle="modal" data-target="#myModal{{user.user_id}}">New Experience</button>
+
+      <!-- Modal -->
+        <div class="modal fade" id="myModal{{user.user_id}}" role="dialog">
+          <div class="modal-dialog">
+          
+            <!-- Modal content-->
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Create New Experience</h4>
+              </div>
+              <div class="modal-body">
+                <form action="/add_form" role="form" method="POST" class="form-group" id="create-new-experience">
+
+                    <label>What's the experience called?</label>
+                    <input type="text" class="form-control" name="experience-name" placeholder="Enter experience name"><br>
+
+                    <label>What city was it in?</label>
+                    <input type="text" class="form-control" name="city" placeholder="Enter city"><br>
+
+                    <label>When was it? </label>
+                    <input type="datetime-local" class="form-control" name="date" id="formdatetime"><br>
+
+                    <label>What did you do?</label>
+                    <input type="text" class="form-control" name="description" placeholder="Enter short description"><br>
+
+                    <label>What category would you say describes this experience the best?</label>
+                    <select class="form-control" name="category">
+                        <option value="110">Food and Drink</option>
+                        <option value="108">Sports and Fitness</option>
+                        <option value="105">Performances and the Arts</option>
+                        <option value="109">Outdoors</option>
+                        <option value="102">New Skills</option>
+                        <option value="100">Other</option>
+                    </select><br>
+
+                    <input type="submit" class="btn btn-default" id="form-submit">
+
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+
+
+
+    
 <div class="container">
-  <h2>Add New Experience</h2>
-  <form action="/add_form" role="form" method="POST" class="form-group" id="create-new-experience">
+  <div class="row">
+      <div class="col-xs-6">
+    <h2>Booked Experiences:</h2>
 
-      <label>What's the experience called?</label>
-      <input type="text" class="form-control" name="experience-name" placeholder="Enter experience name"><br>
+      <ul class="list-group user-details">
 
-      <label>What city was it in?</label>
-      <input type="text" class="form-control" name="city" placeholder="Enter city"><br>
-
-      <label>When was it? </label>
-      <input type="datetime-local" class="form-control" name="date" id="formdatetime"><br>
-
-      <label>What did you do?</label>
-      <input type="text" class="form-control" name="description" placeholder="Enter short description"><br>
-
-      <label>What category would you say describes this experience the best?</label>
-      <select class="form-control" name="category">
-          <option value="110">Food and Drink</option>
-          <option value="108">Sports and Fitness</option>
-          <option value="105">Performances and the Arts</option>
-          <option value="109">Outdoors</option>
-          <option value="102">New Skills</option>
-          <option value="100">Other</option>
-      </select><br>
-
-      <input type="submit" class="btn btn-default" id="form-submit">
-
-  </form>
-</div>
-
-
-  <h2>Booked Experiences:</h2>
-
-  <ul class="list-group">
-
-  {% for booked, experience in exp_booked %}
+      {% for booked, experience in exp_booked %}
    
-    <li class="list-group-item">{{experience.exp_name}}</li>
+      <li class="list-group-item user-details">{{experience.exp_name}}</li>
 
-  {% endfor %}
+      {% endfor %}
 
-  </ul>
+      </ul>
+    </div>
+    <div class="col-xs-6">
 
-<h3>Wanderlist</h3>
+    <h3>Wanderlist</h3>
 
-  <ul class="list-group">
+      <ul class="list-group user-details">
 
-  {% for wanderlisted, experience in exp_wanderlisted %}
+      {% for wanderlisted, experience in exp_wanderlisted %}
    
-    <li class="list-group-item">{{experience.exp_name}}</li>
+      <li class="list-group-item user-details">{{experience.exp_name}}</li>
 
-  {% endfor %}
+      {% endfor %}
 
-  </ul>
+      </ul>
 
-
+      </div>
+    </div>
+    </div>
 </div>
 {% endblock %}

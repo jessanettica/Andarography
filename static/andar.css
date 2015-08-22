@@ -6,3 +6,29 @@
     vertical-align: middle;
     float: none;
 }
+.grid-item { width: 10%;}
+.grid-item--width2 { width: 40%; }
+
+.navbar {
+   background-color: transparent;
+   background: transparent;
+   border-color: transparent;
+   color:black;
+}
+
+.just-go{
+    background-color: transparent;
+    background: transparent;
+    border-color: transparent;
+}
+.btn-home{
+    margin: 10px;
+    background-color: transparent;
+    background: rgba(255, 255, 255, 0.3);
+    border: none;
+}
+
+body{
+    color: black;
+}
+

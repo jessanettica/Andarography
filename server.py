@@ -2,12 +2,13 @@
 
 from jinja2 import StrictUndefined
 
-from flask import Flask, render_template, request, flash, redirect, session
+from flask import Flask, render_template, request, flash, redirect, session, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
 import requests
 from cStringIO import StringIO
 import csv
 from datetime import datetime
+from collections import Counter
 
 
 from model import connect_to_db, db, User, Experience, Provider, Venue, Booked, Wanderlist, Category
@@ -250,7 +251,6 @@ def visualization_process():
     outcsv.writerows(results.all())
 
     outfile.seek(0)
-
     print outfile.read()
     outfile.seek(0)
     return outfile.read()
@@ -266,12 +266,29 @@ def count_exp_in_category():
 
         experience_booked = Booked.query.filter(Booked.user_id == this_user_id).all()
 
-    for thing in experience_booked:
+    category_ids = []
+    for activity in experience_booked:
 
-        print " TIUHLJHBJKHVYHKGVK", thing.exp_id
+        category_id = db.session.query(Experience.exp_category).filter(Experience.exp_id == activity.exp_id).first()
 
-    print "KRISTEN IS ABUSING ME", experience_booked
-    return "YO HI"
+        category_ids.append(category_id[0])
+
+    category_counter = Counter(category_ids)
+
+    categories_to_count = category_counter.items()
+    print categories_to_count
+    print type(categories_to_count)  # list of tuples
+
+    if request.args.get("data"):
+
+        my_list = []
+
+        for category in categories_to_count:
+            my_list.append({"category": category[0], "cat_count": category[1]})
+        return jsonify({"data": my_list})
+
+
+    return render_template("donut.html")
 
 # @app_route(/form)
 #     hike = Experience( location=location,

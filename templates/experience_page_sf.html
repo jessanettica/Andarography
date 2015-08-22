@@ -3,11 +3,11 @@
 
 <h1>San Francisco</h1>  <!-- maybe I can jinja the city name -->
 
-
+<div class="grid">
   <ul id="exp-details">
   {% for experience, provider, venue in experiences_and_providers_and_venues %}
   
-
+<div class="grid-item" >
       <div>{{ experience.exp_name }}</div>
 
 
@@ -74,9 +74,17 @@
           btn-primary
           {% endif %}
         " id="{{experience.exp_id}}">Wanderlist</button>
-
+</div>
   {% endfor %}
   </ul>
 
+</div>
 
+<script>
+$('.grid').masonry({
+  // options
+  itemSelector: '.grid-item',
+  columnWidth: 200
+});
+</script>
 {% endblock %}
