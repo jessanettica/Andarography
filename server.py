@@ -9,9 +9,10 @@ from cStringIO import StringIO
 import csv
 from datetime import datetime
 from collections import Counter
+import random
 
 
-from model import connect_to_db, db, User, Experience, Provider, Venue, Booked, Wanderlist, Category
+from model import connect_to_db, db, User, Experience, Provider, Venue, Booked, Wanderlist, Category, Listed
 
 
 app = Flask(__name__)
@@ -127,8 +128,39 @@ def experince_list():
     booked_experiences = [booked_experience.exp_id for booked_experience in booked_experiences]
     # venues = Venue.query.all()
 
-    return render_template("experience_page_sf.html", favorited_experiences=favorited_experiences, booked_experiences=booked_experiences, experiences_and_providers_and_venues=experiences_and_providers_and_venues)
 
+    pics = ["balloon.jpeg", "beer.jpeg", "biker.jpeg", "bridge2.jpeg", "camping.jpeg", "colorrun.jpeg",
+            "dance.jpeg", "DeathtoStock_Medium4.jpg", "DeathtoStock_Medium7.jpg", "DeathtoStock_Medium9.jpg"
+            "food.jpeg", "guitar.jpeg", "hill.jpeg", "sfbridge.jpeg", "skyline.jpeg", "smoothie.jpeg"]
+
+    random_pic = pics
+
+    return render_template("experience_page_sf.html", favorited_experiences=favorited_experiences, booked_experiences=booked_experiences, experiences_and_providers_and_venues=experiences_and_providers_and_venues, random_pic=random_pic)
+
+
+@app.route("/experiment")
+def experiment():
+
+    experiences_and_providers_and_venues = db.session.query(Experience, Provider, Venue)\
+        .filter_by(exp_city="San Francisco", private="0")\
+        .join(Provider)\
+        .join(Venue)\
+        .all()
+    print experiences_and_providers_and_venues
+
+    favorited_experiences = db.session.query(Wanderlist.exp_id).filter_by(user_id=session.get('user_id')).all()
+    favorited_experiences = [favorited_experience.exp_id for favorited_experience in favorited_experiences]
+
+    booked_experiences = db.session.query(Booked.exp_id).filter_by(user_id=session.get('user_id')).all()
+    booked_experiences = [booked_experience.exp_id for booked_experience in booked_experiences]
+
+    pics = ["balloon.jpeg", "beer.jpeg", "biker.jpeg", "bridge2.jpeg", "camping.jpeg", "colorrun.jpeg",
+            "dance.jpeg", "DeathtoStock_Medium4.jpg", "DeathtoStock_Medium7.jpg", "DeathtoStock_Medium9.jpg"
+            "food.jpeg", "guitar.jpeg", "hill.jpeg", "sfbridge.jpeg", "skyline.jpeg", "smoothie.jpeg"]
+
+    random_pic = random.choice(pics)
+
+    return render_template("experiment.html", rfavorited_experiences=favorited_experiences, booked_experiences=booked_experiences, experiences_and_providers_and_venues=experiences_and_providers_and_venues, random_pic=random_pic)
 
 @app.route('/add_booked', methods=["POST"])
 def add_booked():
@@ -221,6 +253,41 @@ def add_form():
     return "WHOOOOHOOOO"
 
 
+@app.route('/list_form', methods=["POST"])
+def list_form():
+    """
+    Update the Experience table when users click on Submit button. Then
+    I update the Listed table. I get the experience ID from AJAX and the user ID from session.
+    """
+    name = request.form.get("experience-name")
+    city = request.form.get("city")
+    date = request.form.get("date")
+    date = datetime.strptime(date, "%Y-%m-%dT%H:%M")
+    description = request.form.get("description")
+    price = request.form.get("price")
+    category = request.form.get("category")
+
+    new_exp = Experience(exp_name=name,
+                         exp_city=city,
+                         exp_start_datetime=date,
+                         exp_description=description,
+                         exp_price=price,
+                         exp_category=category,
+                         private=False)
+    db.session.add(new_exp)
+    db.session.commit()
+
+    this_user_id = int(session.get('user_id'))
+    exp_id = db.session.query(Experience.exp_id).filter(name == Experience.exp_name).one()[0]
+
+    new_exp = Listed(user_id=this_user_id,
+                     exp_id=exp_id)
+    db.session.add(new_exp)
+    db.session.commit()
+
+    return "WHOOOOHOOOO"
+
+
 @app.route("/user/<int:user_id>")
 def user_page(user_id):
     """Show info about user."""
@@ -233,7 +300,9 @@ def user_page(user_id):
 
     exp_wanderlisted = db.session.query(Wanderlist, Experience).filter(Wanderlist.user_id==user_id).join(Experience).all()
 
-    return render_template("user_page.html", user=user, exp_booked=exp_booked, exp_wanderlisted=exp_wanderlisted)
+    exp_listed = db.session.query(Listed,Experience).filter(Listed.user_id==user_id).join(Experience).all()
+
+    return render_template("user_page.html", user=user, exp_booked=exp_booked, exp_wanderlisted=exp_wanderlisted, exp_listed=exp_listed)
 
 
 @app.route("/visualization_process.csv", methods=['GET',])
@@ -290,13 +359,6 @@ def count_exp_in_category():
 
     return render_template("donut.html")
 
-# @app_route(/form)
-#     hike = Experience( location=location,
-#         private=True)
-
-#         add and commit
-
-#         then add to booked table.
 
 if __name__ == "__main__":
     app.debug = True

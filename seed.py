@@ -31,25 +31,6 @@ def load_categories():
     db.session.commit()
 
 
-# def load_cities():
-#     """Load cities from u.cities into database"""
-
-#     print "Cities"
-
-#     for i, row in enumerate(open("seed_data/u.cities")):
-#         row = row.rstrip()
-
-#         city_id, city_name, city_country = row.split("|")
-
-#         city = City(city_id=city_id, city_name=city_name, city_country=city_country)
-
-#         db.session.add(city)
-
-#         if i % 100 == 0:
-#             print i
-
-#     db.session.commit()
-
 def load_providers():
     """Load venues from u.venues into database"""
     print "Providers"
@@ -245,8 +226,8 @@ if __name__ == "__main__":
     connect_to_db(app)
     db.create_all()
 
-    # load_venues()
-    # load_providers()
-    # load_experiences()
-    sf_experience(105)
-    sf_experience(109)
+    load_venues()
+    load_providers()
+    load_experiences()
+    sf_experience(110)
+    # sf_experience(109)

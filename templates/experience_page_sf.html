@@ -1,13 +1,62 @@
 {% extends 'base.html' %}
 {% block content %}
 
+<style>
+/*  * {
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+  }
+
+  body { font-family: sans-serif; } */
+
+  /* ---- grid ---- */
+
+/*  .grid {
+    background: #EEE;
+    max-width: 100%;
+  }*/
+
+  /* clearfix */
+/*  .grid:after {
+    content: '';
+    display: block;
+    clear: both;
+  }*/
+
+  /* ---- grid-item ---- */
+
+/*  .xgrid-sizer,
+  .xgrid-item {
+    width: 20%;
+  }*/
+
+.grid-item { width: 200px; }
+.grid-item--width2 { width: 400px; }
+
+/*  .xgrid-item {
+    height: 20%;
+    float: left;
+    background: #EEE;
+    border: 1px solid #333;
+    border-color: hsla(0, 0%, 0%, 0.5);
+    border-radius: 5px;
+  }
+
+  .grid-item--width2 { width:  30%; }
+  .grid-item--width3 { width:  60%; }
+
+  .grid-item--height2 { height: 180px; }
+  .grid-item--height3 { height: 260px; }
+  .grid-item--height4 { height: 360px; }*/
+</style>
+
 <h1>San Francisco</h1>  <!-- maybe I can jinja the city name -->
 
 <div class="grid">
-  <ul id="exp-details">
+
   {% for experience, provider, venue in experiences_and_providers_and_venues %}
   
-<div class="grid-item" >
+  <div class="grid-item grid-item--width2">
       <div>{{ experience.exp_name }}</div>
 
 
@@ -48,12 +97,9 @@
         </div>
     
 
-
       <div>{{experience.exp_start_datetime.month}}/{{experience.exp_start_datetime.day}}/{{experience.exp_start_datetime.year}}</div>
       <div>{{experience.exp_start_datetime.hour}}:{{"%02d" % experience.exp_start_datetime.minute}}</div> 
       <div class = "badge">{{experience.exp_price}}</div>
-
-      
 
 
     {% if provider.eventbrite_provider_id %}
@@ -74,17 +120,31 @@
           btn-primary
           {% endif %}
         " id="{{experience.exp_id}}">Wanderlist</button>
-</div>
+    </div>
+
+<!--   <div class="grid-item grid-item--width2 grid-item--height2">
+
+    <img src="/static/balloon.jpeg" alt="some_text">
+
+  </div> -->
+
   {% endfor %}
-  </ul>
+
 
 </div>
+
+
 
 <script>
-$('.grid').masonry({
-  // options
-  itemSelector: '.grid-item',
-  columnWidth: 200
+$(document).ready( function() {
+
+  $('.grid').masonry({
+    itemSelector: '.grid-item',
+    columnWidth: 200
+    // columnWidth: '.grid-sizer',
+    // percentPosition: true
+  });
+  
 });
 </script>
 {% endblock %}

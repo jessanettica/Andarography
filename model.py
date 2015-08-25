@@ -144,6 +144,26 @@ class Wanderlist(db.Model):
             self.wander_id, self.user_id, self.exp_id)
 
 
+class Listed(db.Model):
+    """Experiences Listed by a user."""
+
+    __tablename__ = "listed"
+
+    listed_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
+    exp_id = db.Column(db.Integer, db.ForeignKey('experiences.exp_id'))
+
+    user = db.relationship("User", backref=db.backref("listed", order_by=listed_id))
+
+    experience = db.relationship("Experience", backref=db.backref("listed", order_by=listed_id))
+
+    def __repr__(self):
+        """Provide helpful representation when printed."""
+
+        return "<Listed listed_id=%s user_id=%s exp_id=%s " % (
+            self.listed_id, self.user_id, self.exp_id)
+
+
 class Category(db.Model):
     """Categories for experiences and activities."""
 
@@ -158,21 +178,6 @@ class Category(db.Model):
         return "<Category category_id=%s category_name " % (
             self.category_id, self.category_name)
 
-
-# class City(db.Model):
-#     """Cities available to search."""
-
-#     __tablename__ = "cities"
-
-#     city_id = db.Column(db.Integer, primary_key=True)
-#     city_name = db.Column(db.String(64), nullable=True)
-#     country_name = db.Column(db.String(64), nullable=True)
-
-#     def __repr__(self):
-#         """Provide helpful representation when printed."""
-
-#         return "<City city_id=%s city_name " % (
-#             self.city_id, self.city_name
 
 ##############################################################################
 # Helper functions
