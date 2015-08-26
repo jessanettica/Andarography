@@ -175,7 +175,7 @@ class Category(db.Model):
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return "<Category category_id=%s category_name " % (
+        return "<Category category_id=%s category_name=%s " % (
             self.category_id, self.category_name)
 
 

@@ -19,6 +19,16 @@ body{
 .header{
   font-size: 20px;
 }
+
+#donut {
+  font: 10px sans-serif;
+}
+
+.arc path {
+  stroke: #fff;
+}
+
+
 </style>
 
 <div class="container">
@@ -26,6 +36,8 @@ body{
   <h1 class="text-center">{{ user.user_firstname }}</h1>
 
   <p class="text-center">Home City: {{ user.user_city }}</p>
+
+
 
 
 <!-- Trigger the modal with a button -->
@@ -136,6 +148,13 @@ body{
           </div>
         </div>
   </div>
+
+
+<div id= "donut">
+</div>
+
+
+
 
     
 <div class="container">

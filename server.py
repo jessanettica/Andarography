@@ -250,7 +250,7 @@ def add_form():
     db.session.add(new_exp)
     db.session.commit()
 
-    return "WHOOOOHOOOO"
+    return render_template("user_page.html")
 
 
 @app.route('/list_form', methods=["POST"])
@@ -285,7 +285,7 @@ def list_form():
     db.session.add(new_exp)
     db.session.commit()
 
-    return "WHOOOOHOOOO"
+    return render_template("user_page.html")
 
 
 @app.route("/user/<int:user_id>")
@@ -305,26 +305,6 @@ def user_page(user_id):
     return render_template("user_page.html", user=user, exp_booked=exp_booked, exp_wanderlisted=exp_wanderlisted, exp_listed=exp_listed)
 
 
-@app.route("/visualization_process.csv", methods=['GET',])
-def visualization_process():
-    """Process d3 visualization of user's activity categories"""
-
-    outfile = StringIO()  # in-memory file object
-    outcsv = csv.writer(outfile)
-    results = db.session.query(Booked.user_id,
-                               Booked.exp_id,
-                               Experience.exp_category,
-                               Experience.exp_start_datetime).join(Experience).filter(Booked.user_id == session['user_id'])
-    print results
-    outcsv.writerow(["user_id", "exp_id", "exp_category", "exp_start_datetime"])
-    outcsv.writerows(results.all())
-
-    outfile.seek(0)
-    print outfile.read()
-    outfile.seek(0)
-    return outfile.read()
-
-
 @app.route("/visualize")
 def count_exp_in_category():
     """For user in session, count the number of booked experiences in each category"""
@@ -338,13 +318,12 @@ def count_exp_in_category():
     category_ids = []
     for activity in experience_booked:
 
-        category_id = db.session.query(Experience.exp_category).filter(Experience.exp_id == activity.exp_id).first()
-
-        category_ids.append(category_id[0])
+        category_ids.append(activity.experience.category.category_name)
 
     category_counter = Counter(category_ids)
 
     categories_to_count = category_counter.items()
+    print "list of cats", category_ids
     print categories_to_count
     print type(categories_to_count)  # list of tuples
 

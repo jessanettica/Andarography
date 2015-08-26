@@ -226,8 +226,8 @@ if __name__ == "__main__":
     connect_to_db(app)
     db.create_all()
 
-    load_venues()
-    load_providers()
-    load_experiences()
-    sf_experience(110)
+    load_categories()
+    # load_providers()
+    # load_experiences()
+    # sf_experience(110)
     # sf_experience(109)
