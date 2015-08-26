@@ -2,8 +2,11 @@
 {% block content %}
 
 <style>
+#justgo{
+  color:white;
+}
 body{
-    background:url(/static/globe.jpg);
+    background:url(/static/just_go.jpg);
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center center;
@@ -15,7 +18,7 @@ body{
     <div class="col-md-2"></div>
       <div class="col-md-8 col-sm-6 col-xs-12 well text-center just-go">
 
-        <h1>Just Go.</h1>
+        <h1 id="justgo">Just Go.</h1>
 
         <button type="button" onclick="/howitworks" class="btn btn-default btn-home">How it works</button>
 

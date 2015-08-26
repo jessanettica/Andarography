@@ -115,9 +115,9 @@ def experince_list():
     #this is a line continuation backslash
     #query the db session itself, grab Exp, Provider, and Venue, and then join.
     experiences_and_providers_and_venues = db.session.query(Experience, Provider, Venue)\
-        .filter_by(exp_city="San Francisco", private="0")\
-        .join(Provider)\
-        .join(Venue)\
+        .filter_by(exp_city="San Francisco")\
+        .outerjoin(Provider)\
+        .outerjoin(Venue)\
         .all()
     print experiences_and_providers_and_venues
 
@@ -126,16 +126,15 @@ def experince_list():
 
     booked_experiences = db.session.query(Booked.exp_id).filter_by(user_id=session.get('user_id')).all()
     booked_experiences = [booked_experience.exp_id for booked_experience in booked_experiences]
-    # venues = Venue.query.all()
-
 
     pics = ["balloon.jpeg", "beer.jpeg", "biker.jpeg", "bridge2.jpeg", "camping.jpeg", "colorrun.jpeg",
             "dance.jpeg", "DeathtoStock_Medium4.jpg", "DeathtoStock_Medium7.jpg", "DeathtoStock_Medium9.jpg"
             "food.jpeg", "guitar.jpeg", "hill.jpeg", "sfbridge.jpeg", "skyline.jpeg", "smoothie.jpeg"]
 
-    random_pic = pics
-
-    return render_template("experience_page_sf.html", favorited_experiences=favorited_experiences, booked_experiences=booked_experiences, experiences_and_providers_and_venues=experiences_and_providers_and_venues, random_pic=random_pic)
+    return render_template("experience_page_sf.html", favorited_experiences=favorited_experiences,
+                           booked_experiences=booked_experiences,
+                           experiences_and_providers_and_venues=experiences_and_providers_and_venues,
+                           pics=pics)
 
 
 @app.route("/experiment")
@@ -158,9 +157,9 @@ def experiment():
             "dance.jpeg", "DeathtoStock_Medium4.jpg", "DeathtoStock_Medium7.jpg", "DeathtoStock_Medium9.jpg"
             "food.jpeg", "guitar.jpeg", "hill.jpeg", "sfbridge.jpeg", "skyline.jpeg", "smoothie.jpeg"]
 
-    random_pic = random.choice(pics)
 
-    return render_template("experiment.html", rfavorited_experiences=favorited_experiences, booked_experiences=booked_experiences, experiences_and_providers_and_venues=experiences_and_providers_and_venues, random_pic=random_pic)
+    return render_template("experiment.html", favorited_experiences=favorited_experiences, booked_experiences=booked_experiences, 
+                           experiences_and_providers_and_venues=experiences_and_providers_and_venues, pics=pics)
 
 @app.route('/add_booked', methods=["POST"])
 def add_booked():

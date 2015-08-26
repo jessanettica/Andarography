@@ -2,61 +2,21 @@
 {% block content %}
 
 <style>
-/*  * {
-    -webkit-box-sizing: border-box;
-            box-sizing: border-box;
-  }
 
-  body { font-family: sans-serif; } */
-
-  /* ---- grid ---- */
-
-/*  .grid {
-    background: #EEE;
-    max-width: 100%;
-  }*/
-
-  /* clearfix */
-/*  .grid:after {
-    content: '';
-    display: block;
-    clear: both;
-  }*/
-
-  /* ---- grid-item ---- */
-
-/*  .xgrid-sizer,
-  .xgrid-item {
-    width: 20%;
-  }*/
 
 .grid-item { width: 200px; }
 .grid-item--width2 { width: 400px; }
 
-/*  .xgrid-item {
-    height: 20%;
-    float: left;
-    background: #EEE;
-    border: 1px solid #333;
-    border-color: hsla(0, 0%, 0%, 0.5);
-    border-radius: 5px;
-  }
-
-  .grid-item--width2 { width:  30%; }
-  .grid-item--width3 { width:  60%; }
-
-  .grid-item--height2 { height: 180px; }
-  .grid-item--height3 { height: 260px; }
-  .grid-item--height4 { height: 360px; }*/
 </style>
 
 <h1>San Francisco</h1>  <!-- maybe I can jinja the city name -->
 
-<div class="grid">
+<div class="container">
+  <div class="row-fluid">
 
   {% for experience, provider, venue in experiences_and_providers_and_venues %}
   
-  <div class="grid-item grid-item--width2">
+  <div class="col-md-4">
       <div>{{ experience.exp_name }}</div>
 
 
@@ -75,7 +35,11 @@
               </div>
               <div class="modal-body">
                 <p> {{experience.exp_description}}</p>
-                      <div>{{provider.exp_provider_name}}</div>
+              {% if provider %}
+                 <div>{{provider.exp_provider_name}}</div>
+              {% endif %}
+
+                {% if venue %}
 
                 <div>{{venue.exp_address_line1}}</div>
 
@@ -86,6 +50,7 @@
 
                       <div>{{venue.exp_address_city}}, {{venue.exp_address_region}}</div>
                       <div>{{venue.exp_address_zipcode}}</div>
+                  {% endif %}
 
               </div>
               <div class="modal-footer">
@@ -101,8 +66,8 @@
       <div>{{experience.exp_start_datetime.hour}}:{{"%02d" % experience.exp_start_datetime.minute}}</div> 
       <div class = "badge">{{experience.exp_price}}</div>
 
-
-    {% if provider.eventbrite_provider_id %}
+    
+    {% if provider and provider.eventbrite_provider_id %}
         <a id="{{experience.exp_id}}" href="http://www.eventbrite.com/event/{{experience.eventbrite_event_id}}?ref=ebtn" class="book-button" target="_blank">
           <img border="0" src="http://www.eventbrite.com/custombutton?eid={{experience.eventbrite_event_id}}" alt="Register for Eventbrite API - Office Hours on Eventbrite" />
         </a>
@@ -121,15 +86,16 @@
           {% endif %}
         " id="{{experience.exp_id}}">Wanderlist</button>
     </div>
+  </div>
 
-<!--   <div class="grid-item grid-item--width2 grid-item--height2">
-
-    <img src="/static/balloon.jpeg" alt="some_text">
-
-  </div> -->
+  {% if loop.index % 3 == 0 %}
+  <div class="col-md-4">
+      <img class="img-responsive" src="/static/{{ pics|random }}" alt="SF Picture" width="460" height="345">
+  </div>
+  {% endif %}
 
   {% endfor %}
-
+  </div>
 
 </div>
 

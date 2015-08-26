@@ -35,7 +35,7 @@ $(document).ready(function() {
 
 //donut
 
-    var width = 450,
+    var width = 1100,
         height = 450,
         radius = Math.min(width, height) / 2;
 
@@ -56,7 +56,6 @@ $(document).ready(function() {
         .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
     d3.json("/visualize?data=True", function(error, data) {
-      debugger
       if (error){
         alert(error);
       }
@@ -71,7 +70,7 @@ $(document).ready(function() {
 
       g.append("path")
           .attr("d", arc)
-          .style("fill", function(d) { 
+          .style("fill", function(d) {
             console.log(d);
             return color(d.data.category); });
 
