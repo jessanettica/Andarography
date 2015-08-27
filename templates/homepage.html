@@ -11,21 +11,24 @@ body{
     background-repeat: no-repeat;
     background-position: center center;
 }
+.dropdown{
+  text-align:center;
+}
+
 </style>
 
 <div class="container">
   <div class="row">
-    <div class="col-md-2"></div>
-      <div class="col-md-8 col-sm-6 col-xs-12 well text-center just-go">
+      <div class="col-md-6 col-md-offset-3 well text-center just-go">
 
         <h1 id="justgo">Just Go.</h1>
 
         <button type="button" onclick="/howitworks" class="btn btn-default btn-home">How it works</button>
 
-      <div class="dropdown">
+        <div class="dropdown">
           <button class="btn btn-default dropdown-toggle btn-home" type="button" id="menu1" data-toggle="dropdown">Where to?
-          <span class="caret "></span></button>
-          <ul class="dropdown-menu col-sm-6 col-sm-6 col-xs-12 well text-center" role="menu" aria-labelledby="menu1">
+          <span class="caret"></span></button>
+          <ul class="dropdown-menu dropdown-menu-right well text-center" role="menu" aria-labelledby="menu1">
             <li role="presentation"><a role="menuitem" tabindex="-1" href="/experience_sf">San Francisco, CA</a></li>
             <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Cape Town, South Africa</a></li>
             <li role="presentation"><a role="menuitem" tabindex="-1" href="#">St. Petersburg, Russia</a></li>

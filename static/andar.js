@@ -35,7 +35,7 @@ $(document).ready(function() {
 
 //donut
 
-    var width = 1100,
+    var width = 1140,
         height = 450,
         radius = Math.min(width, height) / 2;
 

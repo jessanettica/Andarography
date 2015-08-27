@@ -15,7 +15,21 @@
    border-color: transparent;
    color:black;
 }
+.navbar-default .navbar-brand{
+  color:#fff;
+}
 
+.navbar-default .navbar-nav>li>a{
+  color:#fff;
+}
+
+.navbar-default .navbar-nav>li>a:hover{
+  color:grey;
+}
+
+.btn-default{
+  color:#fff;
+}
 .just-go{
     background-color: transparent;
     background: transparent;
