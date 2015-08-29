@@ -151,20 +151,24 @@ body{
 <div class="col-offset-6 centered" id= "donut">
 </div>
 
-
+<div class="row">
+  <ul class="nav nav-tabs">
+    <li role="presentation" class="booked active"><a class="tab">Booked</a></li>
+    <li role="presentation" class="wanderlist"><a class="tab">Wanderlist</a></li>
+    <li role="presentation" class="listed"><a class="tab">Listed</a></li>
+  </ul>
+</div>
 
   <div class="row">
-      <div class="col-xs-6">
-      <h2 class="header">Booked Experiences</h2>
+      <div class="section booked">
         <ul class="list-group user-details">
-        {% for booked, experience in exp_booked %}
-        <li class="list-group-item user-details">{{experience.exp_name}}</li>
-        {% endfor %}
+          {% for booked, experience in exp_booked %}
+          <li class="list-group-item user-details">{{experience.exp_name}}</li>
+          {% endfor %}
         </ul>
       </div>
 
-    <div class="col-xs-6">
-      <h3 class="header">Wanderlist</h3>
+    <div class="section wanderlist">
       <ul class="list-group user-details">
       {% for wanderlisted, experience in exp_wanderlisted %}
       <li class="list-group-item user-details">{{experience.exp_name}}</li>
@@ -174,14 +178,14 @@ body{
   </div>
 
   <div class="row">
-  <div class="col-xs-6">
-  <h2 class="header">Listed Experiences</h2>
-    <ul class="list-group user-details">
-    {% for listed, experience in exp_listed %}
-    <li class="list-group-item user-details">{{experience.exp_name}}</li>
-    {% endfor %}
-    </ul>
-  </div>
+    <div class="section listed">
+      <ul class="list-group user-details">
+        {% for listed, experience in exp_listed %}
+        <li class="list-group-item user-details">{{experience.exp_name}}</li>
+        {% endfor %}
+      </ul>
+    </div>
+
 </div>
 
 

@@ -91,6 +91,41 @@ function prependDollarSigns() {
     }
   });
 }
+
+function setupTabs() {
+  $('.section.listed').hide();
+  $('.section.wanderlist').hide();
+
+  $('.wanderlist .tab').click(function() {
+    console.log('clicked wanderlist!');
+    $('.section.booked').hide();
+    $('.section.wanderlist').show();
+    $('.section.listed').hide();
+
+    $('.nav-tabs li').removeClass('active');
+    $('li.wanderlist').addClass('active');
+  });
+
+  $('.booked .tab').click(function() {
+    $('.section.booked').show();
+    $('.section.wanderlist').hide();
+    $('.section.listed').hide();
+
+    $('.nav-tabs li').removeClass('active');
+    $('li.booked').addClass('active');
+  });
+
+  $('.listed .tab').click(function() {
+    $('.section.booked').hide();
+    $('.section.wanderlist').hide();
+    $('.section.listed').show();
+
+    $('.nav-tabs li').removeClass('active');
+    $('li.listed').addClass('active');
+  });
+}
+
+
 // When any user clicks on a button
 // Add the record to connect user and property/experience in the UserProperty/Booked table
 $(document).ready(function() {
@@ -98,4 +133,5 @@ $(document).ready(function() {
    setupWanderButton();
    setupDonutGraph();
    prependDollarSigns();
+   setupTabs();
 });
