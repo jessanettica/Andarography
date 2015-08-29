@@ -28,7 +28,7 @@
 }
 
 .btn-default{
-  color:#fff;
+  color:#grey;
 }
 .just-go{
     background-color: transparent;
@@ -43,6 +43,7 @@
 }
 
 body{
+    font-family: 'Raleway', sans-serif;
     color: black;
 }
 

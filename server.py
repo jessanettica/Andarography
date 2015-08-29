@@ -2,7 +2,7 @@
 
 from jinja2 import StrictUndefined
 
-from flask import Flask, render_template, request, flash, redirect, session, jsonify
+from flask import Flask, render_template, request, flash, redirect, session, jsonify, url_for
 from flask_debugtoolbar import DebugToolbarExtension
 import requests
 from cStringIO import StringIO
@@ -89,7 +89,6 @@ def login_process():
 
     flash("Logged in")
     return redirect("/")
-    #return redirect("/users/%s" % user.user_id)
 
 
 @app.route('/logout')
@@ -115,11 +114,11 @@ def experince_list():
     #this is a line continuation backslash
     #query the db session itself, grab Exp, Provider, and Venue, and then join.
     experiences_and_providers_and_venues = db.session.query(Experience, Provider, Venue)\
-        .filter_by(exp_city="San Francisco")\
+        .filter(Experience.exp_city == "San Francisco", Experience.private == 0)\
         .outerjoin(Provider)\
         .outerjoin(Venue)\
         .all()
-    print experiences_and_providers_and_venues
+    print "OUTPUT", experiences_and_providers_and_venues
 
     favorited_experiences = db.session.query(Wanderlist.exp_id).filter_by(user_id=session.get('user_id')).all()
     favorited_experiences = [favorited_experience.exp_id for favorited_experience in favorited_experiences]
@@ -249,7 +248,7 @@ def add_form():
     db.session.add(new_exp)
     db.session.commit()
 
-    return render_template("user_page.html")
+    return redirect(url_for('user_page'))
 
 
 @app.route('/list_form', methods=["POST"])
@@ -264,6 +263,8 @@ def list_form():
     date = datetime.strptime(date, "%Y-%m-%dT%H:%M")
     description = request.form.get("description")
     price = request.form.get("price")
+    print type(price)
+    # price = '${:,.0f}'.format(price)
     category = request.form.get("category")
 
     new_exp = Experience(exp_name=name,
@@ -284,16 +285,15 @@ def list_form():
     db.session.add(new_exp)
     db.session.commit()
 
-    return render_template("user_page.html")
+    return redirect(url_for('user_page'))
 
 
-@app.route("/user/<int:user_id>")
-def user_page(user_id):
+@app.route("/user")
+def user_page():
     """Show info about user."""
-
     user_id = session['user_id']
     user = User.query.filter_by(user_id=user_id).first()
-    print user
+    print " THIS IS THE USER", user
 
     exp_booked = db.session.query(Booked,Experience).filter(Booked.user_id==user_id).join(Experience).all()
 

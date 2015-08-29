@@ -8,6 +8,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
+print 'Model was imported'
 
 ##############################################################################
 # Model definitions
