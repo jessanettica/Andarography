@@ -93,7 +93,7 @@ h1{
 
           <p>{{experience.exp_start_datetime.month}}/{{experience.exp_start_datetime.day}}/{{experience.exp_start_datetime.year}}</p>
           <p>{{experience.exp_start_datetime.hour}}:{{"%02d" % experience.exp_start_datetime.minute}}</p> 
-          <p class = "badge">{{experience.exp_price}}</p>
+          <p class = "badge price">{{experience.exp_price}}</p>
 
                         
           {% if provider and provider.eventbrite_provider_id %}
@@ -125,16 +125,4 @@ h1{
 </div>
 
 
-<script>
-$(document).ready( function() {
-
-  $('.grid').masonry({
-    itemSelector: '.grid-item',
-    columnWidth: 200
-    // columnWidth: '.grid-sizer',
-    // percentPosition: true
-  });
-  
-});
-</script>
 {% endblock %}

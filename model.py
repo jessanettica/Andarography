@@ -51,6 +51,8 @@ class Experience(db.Model):
     exp_venue_id = db.Column(db.Integer, db.ForeignKey('venues.exp_venue_id'))
     exp_provider_id = db.Column(db.Integer, db.ForeignKey('providers.exp_provider_id'))
 
+    #formatted_price = '$999' # if !exp_price.starts_with($) '$' + exp_price else exp_price
+
     category = db.relationship("Category", backref=db.backref("experiences", order_by=exp_id))
 
     provider = db.relationship("Provider", backref=db.backref("experiences", order_by=exp_id))
