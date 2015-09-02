@@ -1,14 +1,17 @@
 {% extends 'base.html' %}
-{% block content %}
-
+{% block links %}
 <style>
 *, *:before, *:after {box-sizing:  border-box !important;}
 
 body{
-    background:url(/static/globe.jpg);
+    background:url(/static/mission.jpg);
     background-position: center center;
     background-attachment: fixed;
   }
+
+h1{
+  text-align: center;
+}
 
 .row {
  -moz-column-width: 18em;
@@ -27,16 +30,27 @@ body{
 .well {
  position:relative;
  display: block;
- background-color:rgba(255, 255, 255, 0.5);
+ background-color: rgba(16, 16, 16, 0.5);
+ border-color: black;
 }
 
-h1{
+.white{
   color:#fff;
 }
 
-</style>
+#name{
+  font-size: 1.3em;
+}
 
-<h1>San Francisco</h1>  <!-- maybe I can jinja the city name -->
+</style>
+{% endblock %}
+
+{% block content %}
+
+
+
+<h1 class="white">San Francisco</h1>
+
 
 <div class="container">
   <div class="row-fluid">
@@ -45,7 +59,7 @@ h1{
     <div class="item">
       <div class="well">
 
-          <p>{{ experience.exp_name }}</p>
+          <p class="white" id="name">{{ experience.exp_name }}</p>
 
           <!-- Trigger the modal with a button -->
           <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#myModal{{experience.exp_id}}">Experience Details</button>
@@ -91,8 +105,8 @@ h1{
               </div>
                         
 
-          <p>{{experience.exp_start_datetime.month}}/{{experience.exp_start_datetime.day}}/{{experience.exp_start_datetime.year}}</p>
-          <p>{{experience.exp_start_datetime.hour}}:{{"%02d" % experience.exp_start_datetime.minute}}</p> 
+          <p class="white">{{experience.exp_start_datetime.month}}/{{experience.exp_start_datetime.day}}/{{experience.exp_start_datetime.year}}</p>
+          <p class="white">{{experience.exp_start_datetime.hour}}:{{"%02d" % experience.exp_start_datetime.minute}}</p> 
           <p class = "badge price">{{experience.exp_price}}</p>
 
                         

@@ -313,7 +313,7 @@ def count_exp_in_category():
     if this_user_id:
 
         experience_booked = Booked.query.filter(Booked.user_id == this_user_id).all()
-
+        print experience_booked
     category_ids = []
     for activity in experience_booked:
 
@@ -322,6 +322,7 @@ def count_exp_in_category():
     category_counter = Counter(category_ids)
 
     categories_to_count = category_counter.items()
+    print categories_to_count
     print "list of cats", category_ids
     print categories_to_count
     print type(categories_to_count)  # list of tuples

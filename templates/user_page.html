@@ -1,36 +1,39 @@
 {% extends 'base.html' %}
+
+{% block links %}
+   <style>
+   body{
+       background:url(/static/ocean.jpg);
+       background-size: cover;
+       background-repeat: no-repeat;
+       background-position: center center;
+   }
+   .user-details{
+       background-color: transparent;
+       background: rgba(255, 255, 255, 0.3);
+   }
+   .new-exp-btn{
+     float:right;
+     margin: 10px;
+   }
+   .header{
+     font-size: 20px;
+   }
+
+   #donut {
+     font: 10px sans-serif;
+   }
+
+   .arc path {
+     stroke: #fff;
+   }
+
+
+   </style>
+{% endblock %}
+
+
 {% block content %}
-
-<style>
-body{
-    background:url(/static/ocean.jpg);
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center center;
-}
-.user-details{
-    background-color: transparent;
-    background: rgba(255, 255, 255, 0.3);
-}
-.new-exp-btn{
-  float:right;
-  margin: 10px;
-}
-.header{
-  font-size: 20px;
-}
-
-#donut {
-  font: 10px sans-serif;
-}
-
-.arc path {
-  stroke: #fff;
-}
-
-
-</style>
-
 <div class="container">
 
   <h1 class="text-center">{{ user.user_firstname }}</h1>
@@ -151,7 +154,7 @@ body{
 <div class="col-offset-6 centered" id= "donut">
 </div>
 
-<div class="row">
+<div class="row col-md-8 col-md-offset-2">
   <ul class="nav nav-tabs">
     <li role="presentation" class="booked active"><a class="tab">Booked</a></li>
     <li role="presentation" class="wanderlist"><a class="tab">Wanderlist</a></li>
@@ -159,7 +162,7 @@ body{
   </ul>
 </div>
 
-  <div class="row">
+  <div class="row col-md-8 col-md-offset-2">
       <div class="section booked">
         <ul class="list-group user-details">
           {% for booked, experience in exp_booked %}
@@ -177,7 +180,7 @@ body{
     </div>
   </div>
 
-  <div class="row">
+  <div class="row col-md-8 col-md-offset-2">
     <div class="section listed">
       <ul class="list-group user-details">
         {% for listed, experience in exp_listed %}

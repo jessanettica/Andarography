@@ -37,8 +37,9 @@
 }
 .btn-home{
     margin: 10px;
+    color:#fff;
     background-color: transparent;
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.4);
     border: none;
 }
 
