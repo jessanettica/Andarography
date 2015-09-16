@@ -100,18 +100,10 @@ def logout():
     return redirect("/")
 
 
-# @app.route("/howitworks")
-# def howitworks():
-#     """Explain the path of the user through the web app"""
-
-    #return render_template("howitworks.html")
-
-
 @app.route("/experience_sf")
 def experince_list():
     """Show list of experiences in San Francisco"""
 
-    #this is a line continuation backslash
     #query the db session itself, grab Exp, Provider, and Venue, and then join.
     experiences_and_providers_and_venues = db.session.query(Experience, Provider, Venue)\
         .filter(Experience.exp_city == "San Francisco", Experience.private == 0)\
@@ -126,14 +118,9 @@ def experince_list():
     booked_experiences = db.session.query(Booked.exp_id).filter_by(user_id=session.get('user_id')).all()
     booked_experiences = [booked_experience.exp_id for booked_experience in booked_experiences]
 
-    pics = ["balloon.jpeg", "beer.jpeg", "biker.jpeg", "bridge2.jpeg", "camping.jpeg", "colorrun.jpeg",
-            "dance.jpeg", "DeathtoStock_Medium4.jpg", "DeathtoStock_Medium7.jpg", "DeathtoStock_Medium9.jpg"
-            "food.jpeg", "guitar.jpeg", "hill.jpeg", "sfbridge.jpeg", "skyline.jpeg", "smoothie.jpeg"]
-
     return render_template("experience_page_sf.html", favorited_experiences=favorited_experiences,
                            booked_experiences=booked_experiences,
-                           experiences_and_providers_and_venues=experiences_and_providers_and_venues,
-                           pics=pics)
+                           experiences_and_providers_and_venues=experiences_and_providers_and_venues)
 
 
 @app.route("/experiment")
@@ -340,7 +327,7 @@ def count_exp_in_category():
 
 
 if __name__ == "__main__":
-    app.debug = True
+    app.debug = False
     # We have to set debug=True here, since it has to be True at the point
     # that we invoke the DebugToolbarExtension
 

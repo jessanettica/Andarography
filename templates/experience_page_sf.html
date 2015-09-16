@@ -106,7 +106,7 @@ h1{
                         
 
           <p class="white">{{experience.exp_start_datetime.month}}/{{experience.exp_start_datetime.day}}/{{experience.exp_start_datetime.year}}</p>
-          <p class="white">{{experience.exp_start_datetime.hour}}:{{"%02d" % experience.exp_start_datetime.minute}}</p> 
+          <p class="white">{{experience.exp_start_datetime.strftime("%I:%M %p")}}</p> 
           <p class = "badge price">{{experience.exp_price}}</p>
 
                         
