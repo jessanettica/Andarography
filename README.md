@@ -26,6 +26,14 @@ Anadrography was inspired by Jessica's research in St. Petersburg, Russia, in 20
 
 (dependencies are listed in requirements.txt)
 
+Andarography is built on a Flask framework because the microframework, while it does not come with user authentication or an admin interface like Django, is well-designed and flexible. Being able to have more control over the app structure and routing with few predefined requirements was important. 
+
+SQlite was chosen initially because since it makes calls directly to a file holding the data, the SQLite database, it is fast and efficient. Migration to Postgresql was inevitable in order to deploy Andarography, but also necessary because it is a better equipped relational database management system for Andarography, which is meant to be a multi-user application. 
+
+Using SQLAlchemy made the code easy to maintain and create joins easier and more elegantly than in raw SQL (if necessary SQLAlchemy does allow raw SQL). It also allowed access to individual columns in database tables in a pythonic way.
+
+The front-end was built using HTLM, CSS, and Javascript.
+
 ## <a name="experience"></a>Listed Experiences
 ![experiences_page_screenshot](static/experiencepic.png)
 
@@ -47,7 +55,8 @@ The List experience button makes each user a micro-entrepreneur by allowing her 
 ## <a name="v2"></a>Version 2.0
 There are various possible next steps for Andarography. The most obvious is to expand it to support other locations. The database structure was designed with this in mind - more locations are very easy to add.  
 
-A feature that would add to the user experience would be a customized experience page. Once the user books or saves an event, the app could recommend more experiences near that event on the same date. This feature would help users optimize their time in a location. 
+A feature that would add to the user experience would be a customized experience page implemented using a machine learning algorithm. Once the user books or saves an event, the app could recommend more experiences near that event on the same date. This feature would help users optimize their time in a location. Adding category filters would help the user 'silence' events in which they have no interest, and help her achieve any goals she set for participation in events in a certain category. 
 
 ## <a name="author"></a>Author
 Jessica Anette Lopez is a software engineer in San Francisco, CA.
+wwww.linkedin.com/in/jessicaalopez
