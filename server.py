@@ -107,7 +107,7 @@ def experince_list():
 
     #query the db session itself, grab Exp, Provider, and Venue, and then join.
     experiences_and_providers_and_venues = db.session.query(Experience, Provider, Venue)\
-        .filter(Experience.exp_city == "San Francisco", Experience.private == 0)\
+        .filter(Experience.exp_city == "San Francisco", Experience.private == False)\
         .outerjoin(Provider)\
         .outerjoin(Venue)\
         .all()
