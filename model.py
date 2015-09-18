@@ -192,7 +192,7 @@ def connect_to_db(app):
 
     # Configure to use our SQLite database
     #app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///andar.db'
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///andar.db')
     db.app = app
     #connecting my model and my database
     db.init_app(app)
