@@ -328,6 +328,8 @@ def count_exp_in_category():
 
 if __name__ == "__main__":
     app.debug = False
+    PORT = int(os.environ.get("PORT", 5000))
+
     # We have to set debug=True here, since it has to be True at the point
     # that we invoke the DebugToolbarExtension
 
@@ -336,4 +338,4 @@ if __name__ == "__main__":
     # Use the DebugToolbar
     DebugToolbarExtension(app)
 
-    app.run()
+    app.run(port=PORT, host="0.0.0.0")
