@@ -4,17 +4,13 @@
 
 import datetime
 import requests
-
 from model import connect_to_db, db, Experience, User, Booked, Provider, Wanderlist, Category, Venue
-#names of model classes
 from server import app
 import os
 
 
 def load_categories():
     """Load categories from u.categories into database"""
-
-    print "Categories"
 
     for i, row in enumerate(open("seed_data/u.categories")):
         row = row.rstrip()
@@ -33,7 +29,6 @@ def load_categories():
 
 def load_providers():
     """Load venues from u.venues into database"""
-    print "Providers"
 
     for i, row in enumerate(open("seed_data/u.providers")):
         row = row.rstrip()
@@ -101,7 +96,6 @@ def load_experiences():
                                 exp_currency=exp_currency, exp_price=exp_price, exp_venue_id=venue_id, exp_provider_id=provider_id)
         db.session.add(experience)
 
-        # provide some sense of progress
         if i % 100 == 0:
             print i
 
@@ -113,8 +107,6 @@ def get_provider(organizer_id_sf):
     """Add an Eventbrite provider to  db """
     params = {'token': token}
     request_url = "https://www.eventbriteapi.com/v3/organizers/"+organizer_id_sf
-
-    #check db for existing provider ids, update if found
 
     provider = Provider.query.filter_by(eventbrite_provider_id=organizer_id_sf).first()
 

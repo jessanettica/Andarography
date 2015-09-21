@@ -12,7 +12,6 @@ db = SQLAlchemy()
 print 'Model was imported'
 
 ##############################################################################
-# Model definitions
 
 
 class User(db.Model):
@@ -190,19 +189,16 @@ class Category(db.Model):
 def connect_to_db(app):
     """Connect the database to our Flask app."""
 
-    # Configure to use our SQLite database
     #app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///andar.db'
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 
 'postgres://lusjbdzibnxhjb:4HNukyWbMYWUV7ZyIzyITIFcxv@ec2-54-83-57-86.compute-1.amazonaws.com:5432/dkp7hqct3tajs',
         )
     db.app = app
-    #connecting my model and my database
+    #connecting model and database
     db.init_app(app)
 
 
 if __name__ == "__main__":
-    # As a convenience, if we run this module interactively, it will leave
-    # you in a state of being able to work with the database directly.
 
     from server import app
     connect_to_db(app)

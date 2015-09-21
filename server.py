@@ -18,12 +18,10 @@ from model import connect_to_db, db, User, Experience, Provider, Venue, Booked, 
 
 app = Flask(__name__)
 
-# Required to use Flask sessions and the debug toolbar
 app.secret_key = "ABC123"
 
 
 app.jinja_env.undefined = StrictUndefined
-#raise error when variable is undefined in Jinja2
 
 
 @app.route('/')
@@ -44,7 +42,6 @@ def register_form():
 def register_process():
     """Process registration."""
 
-    # Get from variables
     user_firstname = request.form["user_firstname"]
     user_lastname = request.form["user_lastname"]
     user_email = request.form["user_email"]
@@ -71,12 +68,11 @@ def login_form():
 @app.route('/login', methods=['POST'])
 def login_process():
     """Process login."""
-    # Get from variables
+
     email = request.form["email"]
     password = request.form["password"]
 
     user = User.query.filter_by(user_email=email).first()
-    #why first and not one? does not error out X)
     if not user:
         flash("No such user")
         return redirect("/login")
@@ -105,7 +101,6 @@ def logout():
 def experince_list():
     """Show list of experiences in San Francisco"""
 
-    #query the db session itself, grab Exp, Provider, and Venue, and then join.
     experiences_and_providers_and_venues = db.session.query(Experience, Provider, Venue)\
         .filter(Experience.exp_city == "San Francisco", Experience.private == False)\
         .outerjoin(Provider)\
@@ -251,8 +246,6 @@ def list_form():
     date = datetime.strptime(date, "%Y-%m-%dT%H:%M")
     description = request.form.get("description")
     price = request.form.get("price")
-    print type(price)
-    # price = '${:,.0f}'.format(price)
     category = request.form.get("category")
 
     new_exp = Experience(exp_name=name,
@@ -281,7 +274,6 @@ def user_page():
     """Show info about user."""
     user_id = session['user_id']
     user = User.query.filter_by(user_id=user_id).first()
-    print " THIS IS THE USER", user
 
     exp_booked = db.session.query(Booked,Experience).filter(Booked.user_id==user_id).join(Experience).all()
 
@@ -310,10 +302,6 @@ def count_exp_in_category():
     category_counter = Counter(category_ids)
 
     categories_to_count = category_counter.items()
-    print categories_to_count
-    print "list of cats", category_ids
-    print categories_to_count
-    print type(categories_to_count)  # list of tuples
 
     if request.args.get("data"):
 
@@ -322,7 +310,6 @@ def count_exp_in_category():
         for category in categories_to_count:
             my_list.append({"category": category[0], "cat_count": category[1]})
         return jsonify({"data": my_list})
-
 
     return render_template("donut.html")
 
