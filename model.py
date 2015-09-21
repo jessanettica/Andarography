@@ -1,7 +1,7 @@
 """Models and database functions for Andar"""
 
 from flask_sqlalchemy import SQLAlchemy
-import os
+# import os
 
 # This is the connection to the SQLite database; we're getting this through
 # the Flask-SQLAlchemy helper library. On this, we can find the `session`
@@ -189,10 +189,10 @@ class Category(db.Model):
 def connect_to_db(app):
     """Connect the database to our Flask app."""
 
-    #app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///andar.db'
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 
-'postgres://lusjbdzibnxhjb:4HNukyWbMYWUV7ZyIzyITIFcxv@ec2-54-83-57-86.compute-1.amazonaws.com:5432/dkp7hqct3tajs',
-        )
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///andar.db'
+#     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 
+# 'postgres://lusjbdzibnxhjb:4HNukyWbMYWUV7ZyIzyITIFcxv@ec2-54-83-57-86.compute-1.amazonaws.com:5432/dkp7hqct3tajs',
+#         )
     db.app = app
     #connecting model and database
     db.init_app(app)
